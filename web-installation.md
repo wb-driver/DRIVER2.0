@@ -1,4 +1,4 @@
-**Installation**
+**Installation Guide for Ubuntu 18.04**
 
 After login into instance through ssh take a clone using below commands.
 
