@@ -7,6 +7,8 @@ After login into instance through ssh take a clone using below commands.
 
 ![step1](images/Installation_step1.png)
 
+The command should clone the github repository
+
 Run production.sh from driver_new_tech which will take the clone of backend as well as front-end
 repositories and install all teh required prerequisites.
 
@@ -16,6 +18,9 @@ repositories and install all teh required prerequisites.
 ![production.sh](images/Installation_step2_1.png)
 
 ![production.sh](images/Installation_step2_2.png)
+
+This script will download all the necessary pre-requisites to run DRIVER 2.0 and also clone the code for 
+front-end and backend
 
 You must define the constant values in the .env file. A template .env.sample is provided which contains the keys and
 values required to run DRIVER2.0.
@@ -28,12 +33,18 @@ Create .env file in the project directory refer template .env.sample and follow 
 
 ![Environment](images/InstallationEnvironment.png)
 
+This command will create .env file which contains the keys and values required to run DRIVER2.0
+
 In the project directory(/var/www/driver_new_tech/) as a superuser, execute steps below:
 
     sudo docker-compose up -d
 
 ![docker-compose](images/Installation_DockerCompose_1.png)
+
 ![docker-compose](images/Installation_DockerCompose_2.png)
+
+The command should install the necessary packages and shall start all the docker container. i.e driver-new-tech, 
+database, windshaft, driver-celery, redis-server. 
 
 **Review the containers using below command**
 
@@ -41,6 +52,7 @@ In the project directory(/var/www/driver_new_tech/) as a superuser, execute step
 
 ![docker ps](images/Installation_Dockerps.png)
 
+This command will return the list of running docker containers.
 
 **Execute the configure.sh file using below commands.**
 
@@ -51,6 +63,8 @@ In the project directory(/var/www/driver_new_tech/) as a superuser, execute step
 
 ![configure.sh](images/Installation_Configure1.png)
 
+This script will do migrations for all the apps, collect static files necessary for django admin panel and pass ip's 
+of each container to the nginx server and create superuser.
 
 **Create Incident and Intervention schema using below commands.**
 
@@ -64,10 +78,15 @@ In the project directory(/var/www/driver_new_tech/) as a superuser, execute step
 
 ![schema and language](images/Installation_Schema_Language.png)
 
+These commands will create incident and intervention schema and English language will be added for both User Panel 
+and Ashlar Editor
+
 **Admin Panel**
 
     sudo nano /var/www/wb-driver-admin-front-end-angular/dist/web-driver-admin/index.html
     change <app-root hostname = "http://{{ip_addr/domain_name}}/"> to running ip ip_addr/domain_name
+
+API Host will be changed for Ashlar Editor
 
 ![Index.html](images/Installation_Index_Admin.png)
 
@@ -77,6 +96,8 @@ In the project directory(/var/www/driver_new_tech/) as a superuser, execute step
     change <app-root hostname = "http://{{ip_addr/domain_name}}/" windshaftUrl = "http://{{ip_addr/domain_name}}"></app-root> to running ip_addr/domain_name
 
 ![Index.html](images/Installation_IndexUserPanel.png)
+
+API Host will be changed for Ashlar Editor
 
 ###### Link for accessing User & Admin panel:
 
