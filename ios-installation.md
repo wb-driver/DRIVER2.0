@@ -1,5 +1,3 @@
-DRIVER Installation Guide Aventior, Inc.
-
 DRIVER 2.0 iOS Installation Guide
 
 *Take pull from Github/BitBucket.*
