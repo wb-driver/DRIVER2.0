@@ -1,6 +1,6 @@
 **Introduction**
 
-Aventior has deployed the DRIVER 2.0 platform on Amazon Web Services (AWS), Google Cloud Platform (GCP), Microsoft Azure
+DRIVER 2.0 platform has deployed and tested on Amazon Web Services (AWS), Google Cloud Platform (GCP), Microsoft Azure
 and OpenStack. To host the platform, the first step is to create an instance. Below steps should be carried out on each
 of the cloud platforms.
 
@@ -225,3 +225,59 @@ To connect to SQL Managed Instance, follow these steps to retrieve the host name
 
 The value copied represents a fully qualified domain name (FQDN) that can be used to connect to SQL Managed Instance. It
 is similar to the following address example: your_host_name.a1b2c3d4e5f6.database.windows.net.
+
+
+
+**OpenStack**
+
+###### To create an instance using OpenStack, follow the below steps:
+
+1. Click on ‘Compute’ >> ‘Instances’ and then on ‘Launch Instance’.
+
+![openstack](images/openstack1.png)
+
+![openstack](images/openstack2.png)
+
+2. Select your zone and click on ‘Next’.
+
+![openstack](images/openstack3.png)
+
+3. You are now in the ‘Sources’ section. Select an OS for your instance from the ‘+’ button and click on ‘Next’ again.
+
+![openstack](images/openstack4.png)
+
+4. In ‘Flavor’ you select the scale of the virtual machine. When you decide on the capacity you need, click on the ‘+’
+   button and then on ‘Next’ again.
+   
+![openstack](images/openstack5.png)
+
+5. In ‘Networks’ select your default Private network.
+
+![openstack](images/openstack6.png)
+
+6. In ‘Network Ports’ you can associate an IP address with a port.
+
+![openstack](images/openstack7.png)
+
+7. In ‘Security Groups’ you can manage the group of filter rules applied to the instance. We have already prepared by
+   adding Port 80 to the Default security group.
+
+![openstack](images/openstack8.png)
+
+8. In ‘Key Pair’ make sure the key pair you want to use is under ‘Allocated’ and not under ‘Available’. WARNING: Please
+   note this step is not optional. If you do not allocate at least one key pair, you will not be able to access the
+   instance in any way. With the original instance you can connect to the instance and, if you need to, add extra public
+   keys via ./ssh.
+   
+![openstack](images/openstack9.png)
+
+9. In ‘Configuration’ you can keep the default settings.
+
+![openstack](images/openstack10.png)
+
+10. In ‘Metadata’ you can keep the default settings.
+
+![openstack](images/openstack11.png)
+
+11. Click on ‘Launch Instance’ at the bottom of the pop-up to create your machine. Give it a minute to process and it is
+    ready for work.

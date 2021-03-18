@@ -9,8 +9,8 @@
 
 ###### The command should clone the github repository
 
-**2. Run production.sh from driver_new_tech which will take the clone of backend as well as front-end repositories
-and install all teh required prerequisites.**
+**2. Run production.sh from driver_new_tech which will take the clone of backend as well as front-end repositories and
+install all teh required prerequisites.**
 
     cd driver_new_tech
     sudo bash production_host.sh
