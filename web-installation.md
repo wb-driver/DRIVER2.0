@@ -3,7 +3,7 @@
 **1. After login into instance through ssh take a clone using below commands.**
 
     cd ~
-    sudo git clone https://ami_bajwala:EJG7CDrxYTmeMXEjSBXY@bitbucket.org/ami_bajwala/driver_new_tech.git
+    git clone https://bitbucket.org/ami_bajwala/driver_new_tech.git
 
 ![step1](images/Installation_step1.png)
 
@@ -38,7 +38,7 @@ values required to run DRIVER2.0**
 
 **4. In the project directory(/var/www/driver_new_tech/) as a superuser, execute steps below:**
 
-    sudo docker-compose up -d
+    docker-compose up -d
 
 ![docker-compose](images/Installation_DockerCompose_1.png)
 
@@ -48,7 +48,7 @@ values required to run DRIVER2.0**
 
 **5. Review the containers using below command**
 
-    sudo docker ps
+    docker ps
 
 ![docker ps](images/Installation_Dockerps.png)
 
@@ -67,11 +67,22 @@ values required to run DRIVER2.0**
 
 ###### and create superuser.
 
+**8. Creating Initial Dataset**
+
+Execute the below command to create initial dataset. "driver-new-tech" is a name of docker container you can replace it 
+by yours(in case modified).
+
+    docker exec "driver-new-tech" ./manage.py create_dataset
+
+![create_dataset](images/create_dataset.png)
+
+###### This script will create necessary initial dataset such as groups, user details, Country etc.
+
 **7. Create Incident and Intervention schema using below commands.**
 
-    sudo docker exec "driver-new-tech" python ./scripts/load_incident_schema.py --authz 'Token 0af6fba5c87d6335c61c5981007ed385e094bd39' --api-url 'http://{{ip_addr/domain_name}}/api'
+    docker exec "driver-new-tech" python ./scripts/load_incident_schema.py --authz 'Token 0af6fba5c87d6335c61c5981007ed385e094bd39' --api-url 'http://{{ip_addr/domain_name}}/api'
     
-    sudo docker exec "driver-new-tech" python ./scripts/load_intervention_schema.py --authz 'Token 36df3ade778ca4fcf66ba998506bdefa54fdff1c' --api-url 'http://{{ip_addr/domain_name}}/api'
+    docker exec "driver-new-tech" python ./scripts/load_intervention_schema.py --authz 'Token 36df3ade778ca4fcf66ba998506bdefa54fdff1c' --api-url 'http://{{ip_addr/domain_name}}/api'
 
 **8. Add English language for both Admin&User panel using below command.**
 
