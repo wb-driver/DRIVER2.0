@@ -3,7 +3,7 @@
 **1. After login into instance through ssh take a clone using below commands.**
 
     cd ~
-    git clone https://bitbucket.org/ami_bajwala/driver_new_tech.git
+    git clone git@bitbucket.org:ami_bajwala/driver_new_tech.git
 
 ![step1](images/Installation_step1.png)
 
