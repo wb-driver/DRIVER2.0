@@ -2,7 +2,7 @@ DRIVER 2.0 iOS Installation Guide
 
 *Take pull from Github/BitBucket.*
 
-    git clone https://ami_bajwala@bitbucket.org/ami_bajwala/driver_ios.git
+    git clone git@github.com:hsarbas/DRIVER2.0-iOS.git
 
 *Install Xcode Version 11.6*
 

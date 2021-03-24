@@ -2,7 +2,7 @@ DRIVER 2.0 Android Installation Guide
 
 *Take pull from Github/BitBucket*
 
-    git clone https://ami_bajwala@bitbucket.org/ami_bajwala/driver_2.0_android.git
+    git clone git@github.com:hsarbas/DRIVER2.0-Android.git
 
 ![Step 4](images/Android_Step1.png)
 

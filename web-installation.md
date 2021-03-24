@@ -1,9 +1,31 @@
 ****Installation Guide for Ubuntu 18.04****
 
-**1. After login into instance through ssh take a clone using below commands.**
+You must need a **github account with ssh key set up**
+
+After creating github account you can follow below steps to set up ssh key
+
+    ssh-keygen
+
+![keygen](images/keygen1.png)
+
+Press enter to accept the default key and path
+
+Enter and re-enter a passphrase when prompted.
+
+    cat .ssh/id_rsa.pub (in case not default change the path after cat)
+
+![keygen](images/keygen2.png)
+
+###### Copy the ssh key
+
+**login to github** --> **click your avatar** --> **settings** --> under **Account settings** select **SSH and GPG keys**
+click on **New SSH key** button **paste the copied key** inside **key** textarea click on **Add SSH key**
+
+
+**1. After setting up ssh key take clone using below commands.**
 
     cd ~
-    git clone git@bitbucket.org:ami_bajwala/driver_new_tech.git
+    git clone git@github.com:hsarbas/DRIVER2.0.git
 
 ![step1](images/Installation_step1.png)
 
