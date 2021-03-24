@@ -1,6 +1,6 @@
-****DRIVER2.0 Installation Guide for Ubuntu 18.04****
+****DRIVER2.0 installation Guide for Ubuntu 18.04****
 
-To install DRIVER2.0 on your local/remote machine It is necessary to have a **github account with ssh key set up**
+To install DRIVER2.0 on your local/remote machine it is necessary to have a **github account with ssh key set up**
 
 After creating github account you can follow below steps to set up ssh key
 
