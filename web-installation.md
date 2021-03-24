@@ -1,6 +1,6 @@
-****Installation Guide for Ubuntu 18.04****
+****DRIVER2.0 Installation Guide for Ubuntu 18.04****
 
-You must need a **github account with ssh key set up**
+To install DRIVER2.0 on your local/remote machine It is necessary to have a **github account with ssh key set up**
 
 After creating github account you can follow below steps to set up ssh key
 
@@ -18,7 +18,7 @@ Enter and re-enter a passphrase when prompted.
 
 ###### Copy the ssh key
 
-**login to github** --> **click your avatar** --> **settings** --> under **Account settings** select **SSH and GPG keys**
+**login to github** -> **click your avatar** -> **settings** -> under **Account settings** select **SSH and GPG keys**
 click on **New SSH key** button **paste the copied key** inside **key** textarea click on **Add SSH key**
 
 
@@ -32,7 +32,7 @@ click on **New SSH key** button **paste the copied key** inside **key** textarea
 ###### The command should clone the github repository
 
 **2. Run production.sh from driver_new_tech which will take the clone of backend as well as front-end repositories and
-install all teh required prerequisites.**
+install all the required prerequisites.**
 
     cd driver_new_tech
     sudo bash production_host.sh
@@ -48,7 +48,7 @@ install all teh required prerequisites.**
 **You must define the constant values in the .env file. A template .env.sample is provided which contains the keys and
 values required to run DRIVER2.0**
 
-*Create .env file in the project directory refer template .env.sample and follow steps below:*
+*Create .env file in the project directory. Refer a template .env.sample and follow steps below:*
 
     cd /var/www/driver_new_tech/
     sudo nano .env
@@ -58,7 +58,7 @@ values required to run DRIVER2.0**
 
 ###### This command will create .env file which contains the keys and values required to run DRIVER2.0
 
-**4. In the project directory(/var/www/driver_new_tech/) as a superuser, execute steps below:**
+**4. In the project directory(/var/www/driver_new_tech/) execute below step, as a superuser:**
 
     docker-compose up -d
 
