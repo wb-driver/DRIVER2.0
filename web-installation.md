@@ -89,7 +89,7 @@ values required to run DRIVER2.0**
 
 ###### and create superuser.
 
-**8. Creating Initial Dataset**
+**7. Creating Initial Dataset**
 
 Execute the below command to create initial dataset. "driver-new-tech" is a name of docker container you can replace it 
 by yours(in case modified).
@@ -100,13 +100,13 @@ by yours(in case modified).
 
 ###### This script will create necessary initial dataset such as groups, user details, Country etc.
 
-**7. Create Incident and Intervention schema using below commands.**
+**8. Create Incident and Intervention schema using below commands.**
 
     docker exec "driver-new-tech" python ./scripts/load_incident_schema.py --authz 'Token 0af6fba5c87d6335c61c5981007ed385e094bd39' --api-url 'http://{{ip_addr/domain_name}}/api'
     
     docker exec "driver-new-tech" python ./scripts/load_intervention_schema.py --authz 'Token 36df3ade778ca4fcf66ba998506bdefa54fdff1c' --api-url 'http://{{ip_addr/domain_name}}/api'
 
-**8. Add English language for both Admin&User panel using below command.**
+**9. Add English language for both Admin & User panel using below command.**
 
     python ./scripts/load_default_languages.py --authz 'Token 36df3ade778ca4fcf66ba998506bdefa54fdff1c' --api-url 'http://{{ip_addr/domain_name}}/api'
 
