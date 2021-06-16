@@ -35,7 +35,7 @@ click on **New SSH key** button **paste the copied key** inside **key** textarea
 install all the required prerequisites.**
 
     cd driver_new_tech
-    sudo bash production_host.sh
+    bash production_host.sh
 
 ![production.sh](images/Installation_step2_1.png)
 
@@ -106,12 +106,6 @@ by yours(in case modified).
     
     docker exec "driver-new-tech" python ./scripts/load_intervention_schema.py --authz 'Token 36df3ade778ca4fcf66ba998506bdefa54fdff1c' --api-url 'http://{{ip_addr/domain_name}}/api'
 
-**9. Add English language for both Admin & User panel using below command.**
-
-    python ./scripts/load_default_languages.py --authz 'Token 36df3ade778ca4fcf66ba998506bdefa54fdff1c' --api-url 'http://{{ip_addr/domain_name}}/api'
-
-![schema and language](images/Installation_Schema_Language.png)
-
 ###### These commands will create incident and intervention schema and English language will be added for both User Panel and Ashlar Editor
 
 **Admin Panel**
@@ -123,7 +117,12 @@ by yours(in case modified).
 
 ![Index.html](images/Installation_Index_Admin.png)
 
-**User Panel**
+**User Panel(production environment)**
+
+    sudo nano User-Panel/dist/WB-Driver/index.html
+    change <app-root hostname = "/" windshaftUrl = "/"></app-root> to running ip_addr/domain_name
+
+**User Panel(development environment)**
 
     sudo nano /var/www/wb-driver-userpanel_front-end/dist/WB-Driver/index.html
     change <app-root hostname = "http://{{ip_addr/domain_name}}/" windshaftUrl = "http://{{ip_addr/domain_name}}"></app-root> to running ip_addr/domain_name
