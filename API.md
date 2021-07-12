@@ -214,6 +214,64 @@ http://{{ip}}:{{port}}/auth-api/google-login/
 
 **URL**
 
+/api/get-group-permissions/
+
+**METHOD**
+
+  POST
+
+**DATA PARAMS**
+
+{
+  "codename": [
+    "add_record",
+    "change_recordduplicate",
+    "add_sendrolerequest",
+    "view_recordduplicate",
+    "view_recordauditlogentry",
+    "change_record",
+    "view_record"
+  ],
+  "user": xxxx
+}
+
+**RESPONSE**
+
+[
+  {
+    "codename": "add_record",
+    "status": "true"
+  },
+  {
+    "codename": "change_recordduplicate",
+    "status": "true"
+  },
+  {
+    "codename": "add_sendrolerequest",
+    "status": "true"
+  },
+  {
+    "codename": "view_recordduplicate",
+    "status": "true"
+  },
+  {
+    "codename": "view_recordauditlogentry",
+    "status": "true"
+  },
+  {
+    "codename": "change_record",
+    "status": "true"
+  },
+  {
+    "codename": "view_record",
+    "status": "true"
+  }
+]
+
+#######ASHLAR EDITOR
+
+**URL**
+
 http://{{ip}}:{{port}}/api/country-info/
 
 **Data Params**
@@ -1901,7 +1959,7 @@ http://{{ip}}:{{port}}/auth-group/
   {
     "id": 2,
     "label": "English",
-    "csv_file": "https://mumbai.drivertool.org/download/multi-language/ashlar-editor/language-csv/en.csv",
+    "csv_file": "http://localhost/download/multi-language/ashlar-editor/language-csv/en.csv",
     "json_file": "/var/www/static/media/multi-language/ashlar-editor/language-json/en.json",
     "language_code": "en",
     "upload_for": "admin_panel",
@@ -1926,7 +1984,7 @@ http://{{ip}}:{{port}}/auth-group/
 {
   "id": 2,
   "label": "English",
-  "csv_file": "https://mumbai.drivertool.org/download/multi-language/ashlar-editor/language-csv/en.csv",
+  "csv_file": "http://localhost/download/multi-language/ashlar-editor/language-csv/en.csv",
   "json_file": "/var/www/static/media/multi-language/ashlar-editor/language-json/en.json",
   "language_code": "en",
   "upload_for": "admin_panel",
@@ -1981,6 +2039,11 @@ http://{{ip}}:{{port}}/auth-group/
 **METHOD**
 
   GET
+**RESPONSE**
+
+Returns translated text
+
+########USER PANEL
 
 **URL**
 
@@ -2254,3 +2317,363 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
   GET
 
+**RESPONSE**
+
+**URL**
+
+/api/duplicates/?occurred_min=2021-04-10T18:30:00.000Z&occurred_max=2021-07-10T08:29:24.419Z&resolved=False&limit=50&offset=0&search=&polygon_id=
+
+**METHOD**
+
+  GET
+  
+**RESPONSE**
+
+**URL**
+
+/api/duplicate-record-list/d6097440-3a9d-4af4-a7d4-d50887e04d71/
+
+**METHOD**
+
+  GET
+
+**RESPONSE**
+
+
+**URL**
+
+/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=barchart
+
+**METHOD**
+
+  GET
+  
+**RESPONSE**
+
+{
+  "x-axis": [
+    "Pedestrian on foot",
+    "Vehicle from adjacent direction (intersection only)",
+    "Vehicle from opposing direction",
+    "Vehicle from same direction",
+    "Maneuvering",
+    "Overtaking",
+    "On path",
+    "Off path straight",
+    "Off path curve",
+    "Passenger and miscellaneous"
+  ],
+  "y-axis": [
+    "Fatal",
+    "Injury",
+    "Property Damage"
+  ],
+  "data": [
+    [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      2,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      1,
+      1,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ]
+}
+
+**URL**
+
+/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=piechart
+
+**METHOD**
+
+  GET
+  
+**RESPONSE**
+
+{
+  "x-axis": [
+    "Pedestrian on foot",
+    "Vehicle from adjacent direction (intersection only)",
+    "Vehicle from opposing direction",
+    "Vehicle from same direction",
+    "Maneuvering",
+    "Overtaking",
+    "On path",
+    "Off path straight",
+    "Off path curve",
+    "Passenger and miscellaneous"
+  ],
+  "data": [
+    6,
+    1,
+    1,
+    2,
+    3,
+    0,
+    1,
+    0,
+    1,
+    0
+  ]
+}
+
+**URL**
+
+/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&row_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Severity&rowLabel=Crash+Type
+
+**METHOD**
+
+  GET
+  
+**RESPONSE**
+
+{
+  "tables": [
+    {
+      "data": {
+        "Pedestrian on foot": {
+          "Fatal": 1,
+          "Property Damage": 3,
+          "Injury": 2
+        },
+        "Maneuvering": {
+          "Property Damage": 2,
+          "Injury": 1
+        },
+        "Vehicle from same direction": {
+          "Fatal": 1,
+          "Injury": 1
+        },
+        "Vehicle from opposing direction": {
+          "Property Damage": 1
+        },
+        "Vehicle from adjacent direction (intersection only)": {
+          "Property Damage": 1
+        },
+        "Off path curve": {
+          "Fatal": 1
+        },
+        "On path": {
+          "Injury": 1
+        }
+      },
+      "row_totals": {
+        "Pedestrian on foot": 6,
+        "Maneuvering": 3,
+        "Vehicle from same direction": 2,
+        "Vehicle from opposing direction": 1,
+        "Vehicle from adjacent direction (intersection only)": 1,
+        "Off path curve": 1,
+        "On path": 1
+      }
+    }
+  ],
+  "table_labels": {},
+  "row_labels": [
+    {
+      "key": "Pedestrian on foot",
+      "label": [
+        {
+          "text": "Pedestrian on foot",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Vehicle from adjacent direction (intersection only)",
+      "label": [
+        {
+          "text": "Vehicle from adjacent direction (intersection only)",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Vehicle from opposing direction",
+      "label": [
+        {
+          "text": "Vehicle from opposing direction",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Vehicle from same direction",
+      "label": [
+        {
+          "text": "Vehicle from same direction",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Maneuvering",
+      "label": [
+        {
+          "text": "Maneuvering",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Overtaking",
+      "label": [
+        {
+          "text": "Overtaking",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "On path",
+      "label": [
+        {
+          "text": "On path",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Off path straight",
+      "label": [
+        {
+          "text": "Off path straight",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Off path curve",
+      "label": [
+        {
+          "text": "Off path curve",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Passenger and miscellaneous",
+      "label": [
+        {
+          "text": "Passenger and miscellaneous",
+          "translate": false
+        }
+      ]
+    }
+  ],
+  "col_labels": [
+    {
+      "key": "Fatal",
+      "label": [
+        {
+          "text": "Fatal",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Injury",
+      "label": [
+        {
+          "text": "Injury",
+          "translate": false
+        }
+      ]
+    },
+    {
+      "key": "Property Damage",
+      "label": [
+        {
+          "text": "Property Damage",
+          "translate": false
+        }
+      ]
+    }
+  ]
+}
+
+**URL**
+
+/api/csv-export/
+
+**METHOD**
+
+  POST
+  
+**DATA PARAMS**
+
+{"tilekey":"0xxxxx-xxxxxx-xxxxx-xxxxx-xxxxxxxx6","group_id":x}
+
+**RESPONSE**
+
+{
+  "success": true,
+  "taskid": "7xxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxxxx7"
+}
+
+**URL**
+
+/api/csv-export/7xxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxxxx7/
+
+**METHOD**
+
+  GET
+  
+**RESPONSE**
+
+{"status":"SUCCESS","result":"http://localhost/download/Incidents-0f783106.zip"}
+
+
+**URL**
+
+/api/getrecords/?archived=False&jsonb={%22driverIncidentDetails%22:{%22Severity%22:{%22_rule_type%22:%22containment%22,%22contains%22:[]}}}&polygon={%22type%22:%22Polygon%22,%22coordinates%22:[[[121.35498046875001,16.088042220148818],[121.35498046875001,17.14079039331665],[122.29980468750001,17.14079039331665],[122.29980468750001,16.088042220148818],[121.35498046875001,16.088042220148818]]]}&limit=50&occurred_max=2021-07-10T08:39:03.000Z&occurred_min=2021-05-31T18:30:00.000Z&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&tilekey=falsenull&flag=0
+
+**METHOD**
+
+  GET
+
+**RESPONSE**
+
+[
+  {
+    "Crash number": 1,
+    "Date: day-month": "04-06",
+    "Date: year": 2021,
+    "Day of week": "Friday",
+    "Time of day": "16:13",
+    "Severity": [
+      "Fatal",
+      "Injury"
+    ],
+    "light": "",
+    "DCA code": ""
+  }
+]
