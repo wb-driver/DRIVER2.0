@@ -30,7 +30,7 @@ http://{{ip}}:{{port}}/api/registration/
       "Public",
       1
     ],
-    "token": "acdc96bea52782f7b362ccee1e4de9b8eb5365d2",
+    "token": "axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2",
     "id": 4004,
     "first_name": "David",
     "last_name": "Turner",
@@ -117,7 +117,7 @@ http://{{ip}}:{{port}}/auth-api/api-token-auth/
 
 [
   {
-    "token": "acdc96bea52782f7b362ccee1e4de9b8eb5365d2",
+    "token": "axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2",
     "username": "david.turner",
     "group": [
       "Public",
@@ -137,7 +137,7 @@ http://{{ip}}:{{port}}/auth-api/api-token-auth/
 
 **URL**
 
-/api/return-token/4004/
+http://{{ip}}:{{port}}/api/return-token/4004/
 
 **METHOD**
 
@@ -177,7 +177,7 @@ http://{{ip}}:{{port}}/auth-api/google-login/
 
 **URL**
 
-/auth-api/user-info/2/
+http://{{ip}}:{{port}}/auth-api/user-info/2/
 
 **METHOD**
 
@@ -214,7 +214,7 @@ http://{{ip}}:{{port}}/auth-api/google-login/
 
 **URL**
 
-/api/get-group-permissions/
+http://{{ip}}:{{port}}/api/get-group-permissions/
 
 **METHOD**
 
@@ -341,7 +341,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/auth-api/driver-group/
+http://{{ip}}:{{port}}/auth-api/driver-group/
 
 **METHOD**
 
@@ -373,7 +373,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/auth-api/weather-info/
+http://{{ip}}:{{port}}/auth-api/weather-info/
 
 **METHOD**
 
@@ -397,7 +397,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/auth-api/weather-info/
+http://{{ip}}:{{port}}/auth-api/weather-info/
 
 **METHOD**
 
@@ -422,7 +422,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/auth-api/weather-info-details/id/
+http://{{ip}}:{{port}}/auth-api/weather-info-details/id/
 
 **METHOD**
 
@@ -441,7 +441,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/weather-data-list/
+http://{{ip}}:{{port}}/api/weather-data-list/
 
 **METHOD**
 
@@ -458,7 +458,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/weather-data-list/
+http://{{ip}}:{{port}}/api/weather-data-list/
 
 **METHOD**
 
@@ -478,7 +478,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/recordtypes/
+http://{{ip}}:{{port}}/api/recordtypes/
 
 **METHOD**
 
@@ -515,7 +515,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/data-api/bindcrashtype/uuid_of_recordtype/
+http://{{ip}}:{{port}}/data-api/bindcrashtype/uuid_of_recordtype/
 
 **METHOD**
 
@@ -523,7 +523,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/boundaries/
+http://{{ip}}:{{port}}/api/boundaries/
 
 **METHOD**
 
@@ -603,7 +603,7 @@ http://{{ip}}:{{port}}/auth-group/
     "created": "2021-07-05T08:24:14.901907Z",
     "modified": "2021-07-05T08:25:09.549569Z",
     "status": "COMPLETE",
-    "source_file": "http://127.0.0.1:8000/api/boundaries/boundaries/2021/07/05/city_new.zip"
+    "source_file": "http://localhost/api/boundaries/boundaries/2021/07/05/city_new.zip"
   },
   {
     "uuid": "45e1fb55-b1af-4d0f-b1a1-60d9f5a253d7",
@@ -625,13 +625,13 @@ http://{{ip}}:{{port}}/auth-group/
     "created": "2018-01-22T20:27:31.668576Z",
     "modified": "2018-07-06T07:06:52.852305Z",
     "status": "COMPLETE",
-    "source_file": "http://127.0.0.1:8000/api/boundaries/boundaries/2018/01/23/IND_adm.zip"
+    "source_file": "http://localost/api/boundaries/boundaries/2018/01/23/IND_adm.zip"
   }
 ]
 
 **URL**
 
-/api/auth-group/
+http://{{ip}}:{{port}}/api/auth-group/
 
 **METHOD**
 
@@ -1710,7 +1710,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/country-info/?archived=true
+http://{{ip}}:{{port}}/api/country-info/?archived=true
 
 **METHOD**
 
@@ -1731,7 +1731,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/dedupe-config/
+http://{{ip}}:{{port}}/api/dedupe-config/
 
 **METHOD**
 
@@ -1751,7 +1751,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/dedupe-config/id/
+http://{{ip}}:{{port}}/api/dedupe-config/id/
 
 **METHOD**
 
@@ -1771,7 +1771,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/bulk-upload-details/
+http://{{ip}}:{{port}}/api/bulk-upload-details/
 
 **METHOD**
 
@@ -1791,7 +1791,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/bulkupload/
+http://{{ip}}:{{port}}/api/bulkupload/
 
 **METHOD**
 
@@ -1815,7 +1815,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/blackspotconfig/?limit=all
+http://{{ip}}:{{port}}/api/blackspotconfig/?limit=all
 
 **METHOD**
 
@@ -1834,7 +1834,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/blackspotconfig/uuid/
+http://{{ip}}:{{port}}/api/blackspotconfig/uuid/
 
 **METHOD**
 
@@ -1857,7 +1857,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/recordtypes/
+http://{{ip}}:{{port}}/api/recordtypes/
 
 **METHOD**
 
@@ -1879,7 +1879,7 @@ http://{{ip}}:{{port}}/auth-group/
 }
 **URL**
 
-/api/recordtypes/83884189-dc84-46d3-ac64-6932d3638483/
+http://{{ip}}:{{port}}/api/recordtypes/8xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx3/
 
 **METHOD**
 
@@ -1887,7 +1887,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/data-api/latestrecordschema/
+http://{{ip}}:{{port}}/data-api/latestrecordschema/
 
 **METHOD**
 
@@ -1932,14 +1932,14 @@ http://{{ip}}:{{port}}/auth-group/
         "plural_title": ""
       },
       "next_version_id": null,
-      "record_type_id": "e83d8cc8-9bd5-406c-a471-a5e7e3b02386"
+      "record_type_id": "exxxx-xxxx-xxxx-xxxxxxx-xxxxxxxxx6"
     }
   ]
 }
 
 **URL**
 
-/api/recordschemas/f825db2c-d182-4edc-8778-1b19452ed3b7/
+http://{{ip}}:{{port}}/api/recordschemas/fxxxxxx-xxxx-xxx-xxxx-xxxxxxxx7/
 
 **METHOD**
 
@@ -1947,7 +1947,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/language-details/?archive=False
+http://{{ip}}:{{port}}/api/language-details/?archive=False
 
 **METHOD**
 
@@ -1973,7 +1973,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/language-details/2/
+http://{{ip}}:{{port}}/api/language-details/2/
 
 **METHOD**
 
@@ -1997,7 +1997,7 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/language-details/2/
+http://{{ip}}:{{port}}/api/language-details/2/
 
 **METHOD**
 
@@ -2020,7 +2020,7 @@ http://{{ip}}:{{port}}/auth-group/
 {
   "id": 2,
   "label": "English",
-  "csv_file": "http://127.0.0.1:8000/download/multi-language/ashlar-editor/language-csv/en.csv",
+  "csv_file": "http://localhost/download/multi-language/ashlar-editor/language-csv/en.csv",
   "json_file": "/var/www/static/media/multi-language/ashlar-editor/language-json/en.json",
   "language_code": "en",
   "upload_for": "admin_panel",
@@ -2033,8 +2033,8 @@ http://{{ip}}:{{port}}/auth-group/
 
 **URL**
 
-/api/lang-json/en/admin_panel/
-/api/lang-json/en/user_panel/
+http://{{ip}}:{{port}}/api/lang-json/en/admin_panel/
+http://{{ip}}:{{port}}/api/lang-json/en/user_panel/
 
 **METHOD**
 
@@ -2047,7 +2047,7 @@ Returns translated text
 
 **URL**
 
-/api/userfilters/
+http://{{ip}}:{{port}}/api/userfilters/
 
 **METHOD**
 
@@ -2055,7 +2055,7 @@ Returns translated text
 
 **URL**
 
-/api/boundarypolygons/?active=True&boundary=fa146d5b-600c-4273-ad68-119f5c1d06ab&limit=all&nogeom=true
+http://{{ip}}:{{port}}/api/boundarypolygons/?active=True&boundary=fa146d5b-600c-4273-ad68-119f5c1d06ab&limit=all&nogeom=true
 
 **METHOD**
 
@@ -2063,7 +2063,7 @@ Returns translated text
 
 **URL**
 
-api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-07-08T09:36:23.462Z&occurred_min=2021-04-09T09:36:23.462Z&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e&jsonb=&polygon=
+http://{{ip}}:{{port}}api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-07-08T09:36:23.462Z&occurred_min=2021-04-09T09:36:23.462Z&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e&jsonb=&polygon=
 
 **METHOD**
 
@@ -2106,7 +2106,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/costs/?archived=False&occurred_min=2021-04-08T18:30:00.000Z&occurred_max=2021-07-08T09:36:23.464Z&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
+http://{{ip}}:{{port}}/api/records/costs/?archived=False&occurred_min=2021-04-08T18:30:00.000Z&occurred_max=2021-07-08T09:36:23.464Z&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
 
 **METHOD**
 
@@ -2119,7 +2119,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/recent_counts/?archived=False&details_only=True&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
+http://{{ip}}:{{port}}/api/records/recent_counts/?archived=False&details_only=True&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
 
 **METHOD**
 
@@ -2131,7 +2131,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/blackspotsets/?effective_at=2021-07-08T09:36:23.469Z&limit=all&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
+http://{{ip}}:{{port}}/api/blackspotsets/?effective_at=2021-07-08T09:36:23.469Z&limit=all&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
 
 **METHOD**
 
@@ -2152,7 +2152,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/?archived=False&tilekey=true&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e&occurred_min=2021-06-24T09:36:23.472Z
+http://{{ip}}:{{port}}/api/records/?archived=False&tilekey=true&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e&occurred_min=2021-06-24T09:36:23.472Z
 
 **METHOD**
 
@@ -2164,7 +2164,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/?details_only=True&search=&archived=False&limit=50&polygon_id=&polygon=&jsonb={%22driverIncidentDetails%22:{%22Severity%22:{%22_rule_type%22:%22containment%22,%22contains%22:[]}}}&polygon=&occurred_max=2021-07-08T09:58:44.071Z&occurred_min=2021-04-08T18:30:00.000Z&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&tilekey=false
+http://{{ip}}:{{port}}/api/records/?details_only=True&search=&archived=False&limit=50&polygon_id=&polygon=&jsonb={%22driverIncidentDetails%22:{%22Severity%22:{%22_rule_type%22:%22containment%22,%22contains%22:[]}}}&polygon=&occurred_max=2021-07-08T09:58:44.071Z&occurred_min=2021-04-08T18:30:00.000Z&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&tilekey=false
 
 **METHOD**
 
@@ -2222,7 +2222,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/1b043f48-a08f-44ca-a600-c21c269fbfcc/
+http://{{ip}}:{{port}}/api/records/1b043f48-a08f-44ca-a600-c21c269fbfcc/
 
 **METHOD**
 
@@ -2311,7 +2311,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/record-copy-details/1b043f48-a08f-44ca-a600-c21c269fbfcc/
+http://{{ip}}:{{port}}/api/record-copy-details/1b043f48-a08f-44ca-a600-c21c269fbfcc/
 
 **METHOD**
 
@@ -2321,7 +2321,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/duplicates/?occurred_min=2021-04-10T18:30:00.000Z&occurred_max=2021-07-10T08:29:24.419Z&resolved=False&limit=50&offset=0&search=&polygon_id=
+http://{{ip}}:{{port}}/api/duplicates/?occurred_min=2021-04-10T18:30:00.000Z&occurred_max=2021-07-10T08:29:24.419Z&resolved=False&limit=50&offset=0&search=&polygon_id=
 
 **METHOD**
 
@@ -2331,7 +2331,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/duplicate-record-list/d6097440-3a9d-4af4-a7d4-d50887e04d71/
+http://{{ip}}:{{port}}/api/duplicate-record-list/d6097440-3a9d-4af4-a7d4-d50887e04d71/
 
 **METHOD**
 
@@ -2342,7 +2342,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=barchart
+http://{{ip}}:{{port}}/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=barchart
 
 **METHOD**
 
@@ -2410,7 +2410,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=piechart
+http://{{ip}}:{{port}}/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=piechart
 
 **METHOD**
 
@@ -2447,7 +2447,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&row_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Severity&rowLabel=Crash+Type
+http://{{ip}}:{{port}}/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&row_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Severity&rowLabel=Crash+Type
 
 **METHOD**
 
@@ -2622,7 +2622,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/csv-export/
+http://{{ip}}:{{port}}/api/csv-export/
 
 **METHOD**
 
@@ -2641,7 +2641,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/csv-export/7xxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxxxx7/
+http://{{ip}}:{{port}}/api/csv-export/7xxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxxxx7/
 
 **METHOD**
 
@@ -2654,7 +2654,7 @@ api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-0
 
 **URL**
 
-/api/getrecords/?archived=False&jsonb={%22driverIncidentDetails%22:{%22Severity%22:{%22_rule_type%22:%22containment%22,%22contains%22:[]}}}&polygon={%22type%22:%22Polygon%22,%22coordinates%22:[[[121.35498046875001,16.088042220148818],[121.35498046875001,17.14079039331665],[122.29980468750001,17.14079039331665],[122.29980468750001,16.088042220148818],[121.35498046875001,16.088042220148818]]]}&limit=50&occurred_max=2021-07-10T08:39:03.000Z&occurred_min=2021-05-31T18:30:00.000Z&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&tilekey=falsenull&flag=0
+http://{{ip}}:{{port}}/api/getrecords/?archived=False&jsonb={%22driverIncidentDetails%22:{%22Severity%22:{%22_rule_type%22:%22containment%22,%22contains%22:[]}}}&polygon={%22type%22:%22Polygon%22,%22coordinates%22:[[[121.35498046875001,16.088042220148818],[121.35498046875001,17.14079039331665],[122.29980468750001,17.14079039331665],[122.29980468750001,16.088042220148818],[121.35498046875001,16.088042220148818]]]}&limit=50&occurred_max=2021-07-10T08:39:03.000Z&occurred_min=2021-05-31T18:30:00.000Z&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&tilekey=falsenull&flag=0
 
 **METHOD**
 
