@@ -1,2679 +1,1140 @@
-#####DRIVER2.0
+# API Documentation
+## Overview
+DRIVER is a flexible app for storing crash data and related information. DRIVER provides a robust REST API for querying its data. This document describes how to interact with the DRIVER API.
 
-**URL**
+## Table of Contents
+- [**Resource Types**](#resource-types)
+- [**Authentication**](#authentication)
+- [**Requests and Responses**](#requests-and-responses)
+- [**Record Types**](#record-types)
+- [**Record Schemas**](#record-schemas)
+- [**Records**](#records)
+- [**Boundaries**](#boundaries)
+- [**Boundary Polygons**](#boundary-polygons)
+- [**Black Spot Sets**](#black-spot-sets)
+- [**Black Spots**](#black-spots)
+- [**Registration**](#registration)
 
-http://{{ip}}:{{port}}/api/registration/
+## Resource Types
 
-**METHOD**
+The following resources are made available via the API:
 
-  POST
+* Records
 
-**Data Params**
+    * This contains crash data.
 
+* Record Types
+
+    * The DRIVER system stores other information besides crash data; Record Types are used to group together Records which store a particular type of information.
+
+* Record Schemas
+
+    * Defines exactly what fields may be expected on a given Record.
+
+* Boundaries
+
+    * Groupings of subdivisions of an area. For example, provinces or states within a country where DRIVER is being operated.
+
+* Boundary Polygons
+
+    * Provides a GeoJSON representation of the polygons present in each Boundary.
+
+* Black Spots Sets
+
+    * Groupings of Black Spots, which represent areas where crashes are predicted to occur with higher-than-usual frequency.
+
+* Black Spot
+
+    * Information about a particular Black Spot.
+
+Note : there are other resource types available but they are used primarily for internal purposes; a complete list of resource types is available by sending an authenticated GET request to /api/ (see below).
+
+## Authentication
+
+In order to interact with the DRIVER API you will need a user account. This can be given to you as a username and password by an administrator, or you can use your Google account to sign up.
+
+Once you have a user account, you will need to obtain an API token.
+
+**Developer Tools**
+
+One way to retrieve your API token is by using the developer tools panel.  Once you have access to the system, open up the panel by hitting F12.  Refresh the page and view the network tab of developer tools.  Look for a request to one of the application’s API endpoints (e.g. to the `/api/boundaries/` endpoint).  In the request headers look for the `Authorization` key-value pair.  This contains your API token, listed as `Token [token value]`.
+
+**Username / Password**
+
+To gain a token using your username / password, you will need to send a POST request to /api-token-auth/ with a payload of the following form:
+```
 {
-  "username": "david.turner",
-  "password": "Admin@123",
-  "first_name": "David",
-  "last_name": "Turner",
-  "email": "david.turner@gmail.com",
-  "groups": [
-    "Public"
-  ],
-  "is_staff": "False"
+
+    "password": "your-password-here",
+
+    "username": "your-username-here"
+
 }
-
-**Response**
-
-[
-  {
-    "groupdetail": [
-      "Public",
-      1
-    ],
-    "token": "axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2",
-    "id": 4004,
-    "first_name": "David",
-    "last_name": "Turner",
-    "username": "david.turner",
-    "groups": [
-      "Public"
-    ],
-    "email": "david.turner@gmail.com",
-    "date_joined": "2021-07-05T12:36:09.700035+05:30",
-    "is_staff": false,
-    "is_superuser": false
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/auth-api/adv-registration/
-
-**METHOD**
-
-  POST
-
-**Data Params**
-
+```
+You will then receive a JSON response with the following format:
+```
 {
-  "username": "david.turner",
-  "password": "David@123",
-  "first_name": "David",
-  "last_name": "Turner",
-  "email": "david.turner@gmail.com",
-  "groups": [],
-  "geography": "",
-  "is_staff": "False",
-  "user": 4004
+
+    "user": <integer>,
+
+    "token": "token-here"
+
 }
+```
 
-**Response**
+`Authorization: Token <token>`
 
-[
-  {
-    "id": 4004,
-    "first_name": "David",
-    "last_name": "Turner",
-    "email": "david.turner@gmail.com",
-    "username": "david.turner",
-    "geography": "",
-    "reg": [],
-    "city": [],
-    "org": [],
-    "groups": [
-      "Public"
-    ],
-    "is_active": true,
-    "date_joined": "2021-07-05T12:36:10.175224+05:30",
-    "updated_on": "2021-07-05T12:36:10.175244+05:30",
-    "user": 4004,
-    "is_role_requested": "Not Requested",
-    "mobile_no": null,
-    "is_staff": false,
-    "is_superuser": false,
-    "is_analyst": false,
-    "is_tech_analyst": false,
-    "google_user": false
-  }
-]
+## Requests and Responses
 
+Communication with the API generally follows the principles of RESTful API design. API paths correspond to resources, GET requests are used to retrieve objects, while POST requests are used to create new objects. This pattern is followed in nearly all cases; any exceptions will be noted in the documentation.
 
-**URL**
+Responses from the API are exclusively JSON, unless another format is clearly required (CSV exports, for example).
 
-http://{{ip}}:{{port}}/auth-api/api-token-auth/
+Endpoint behavior can be configured using query parameters for GET requests, while POST requests require a payload in JSON format.
 
-**METHOD**
+### Pagination
 
-  POST
-
-**Data Params**
-
+All API endpoints that return lists of resources are paginated. The pagination takes the following format:
+```
 {
-    "username":"david.turner",
-    "password":"Admin@123"
+    "count": 57624,
+    "next": "[http://localhost:7000/api/records/?offset=20](http://localhost:7000/api/records/?offset=20)",
+    "previous": "[http://localhost:7000/api/records/](http://localhost:7000/api/records/)",
+    "results": [
+
+        ...
+    ]
 }
+```
+In a real response, the domain and port for the next and previous fields will be that of the server responding to the request.
 
-**Response**
+This format applies to the API endpoints below and will not be repeated in the documentation for each individual endpoint.
 
-[
-  {
-    "token": "axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2",
-    "username": "david.turner",
-    "group": [
-      "Public",
-      1
-    ],
-    "user": 4004,
-    "first name": "David",
-    "last name": "Turner",
-    "email_address": "david.turner@gmail.com",
-    "active": true,
-    "staff_status": false,
-    "superuser_status": false,
-    "is_analyst": false,
-    "is_tech_analyst": false
-  }
-]
+### JSON-Schema
 
-**URL**
+The DRIVER API makes heavy use of [JSON Schema](http://json-schema.org/) -- it's a good idea to gain familiarity with how JSON Schema works before interacting with the API.
 
-http://{{ip}}:{{port}}/api/return-token/4004/
+## Record Types
 
-**METHOD**
+Paths
 
-  GET
+* List: `/api/recordtypes/`
 
-**RESPONSE**
+* Detail: `/api/recordtypes/{uuid}/`
 
-[
-  {
-    "data": {
-      "groupdetail": [
-        2,
-        "Admin"
-      ],
-      "key": "f1aa00d42ee8c1eb690773afad9327c467ab9fab"
-    },
-    "message": "Success",
-    "status": true
-  }
-]
+Query parameters
 
-**URL**
+* `active`: Boolean
 
-http://{{ip}}:{{port}}/auth-api/google-login/
+    * In the UI, Record Types are deactivated rather than deleted entirely. Generally, you will want to limit yourself to active Record Types.
 
-**METHOD**
+Results fields
 
-  POST
+* `uuid`: UUID
 
-**Data Params**
+    * Unique identifier for the RecordType
 
+* `current_schema`: UUID
+
+    * The currently active schema for this RecordType
+
+* `created`: Timestamp
+
+* `modified`: Timestamp
+
+* `label`: String
+
+* `plural_label`: String
+
+* `description`: String
+
+* `active`: Boolean
+
+**Notes**
+
+Because the data schema for a RecordType can be changed by system administrators or programmatically, it is *highly* recommended to use the RecordType API in order to discover the most recent RecordSchema for the RecordType you are interested in before performing further queries. Record Types do not change frequently after initial setup is complete, so knowing the UUID of the Record Type you're interested in will usually be sufficient.
+
+## Record Schemas
+
+Paths
+
+* List: `/api/recordschemas/`
+
+* Detail: `/api/recordschemas/{uuid}/`
+
+Results fields
+
+* `uuid`: UUID
+
+    * Unique identifier for the Record Schema
+
+* `created`: Timestamp
+
+* `modified`: Timestamp
+
+* `version`: Int
+
+    * A sequential number indicating what version of the Record Type's schema this is. Starts at 1.
+
+* `next_version`: UUID
+
+    * Unique identifier of the RecordSchema with the next-highest version number for this schema's Record Type.
+
+    * Null if this is the most recent version
+
+* `record_type`: UUID
+
+    * Unique identifier of this Record Schema's Record Type
+
+* `schema`: Object
+
+    * A JSON Schema object
+
+## Records
+
+**Paths**
+
+* List: `/api/records/`
+
+* Aggregation:
+
+    * `/api/records/stepwise/`
+
+        * Returns a weekly aggregation of the matching Records suitable for constructing a bar or line graph
+
+        * Results are returned with an **array** as the root JSON object. Each element in the array is an object representing the count of Records in a given week of a year. Because weeks often cross the boundary between two years, it is **not** true that the sum of the Record count for all weeks in a year will always be the same as the number of Records in that year. It is also **not** true that a year will always have 52 weeks; years can be assigned up to 54 weeks depending on where each New Year's Day falls. This functionality uses the Postgres EXTRACT function to determine the week and year into which an event falls. Please see [the documentation for EXTRACT](https://www.postgresql.org/docs/9.4/static/functions-datetime.html#FUNCTIONS-DATETIME-EXTRACT) for more information about how this works.
+
+        * Element fields
+
+            * `count`: Int
+
+            * `week`: Int
+
+                * The week number within the year.
+
+            * `year`: Int
+
+                * The year number
+
+    * `/api/records/toddow/`
+
+        * Returns an aggregated table of the matching Records broken out by hour of day (ToD) and Day of Week (DoW).
+
+        * Results are returned with an **array** as the root JSON object. Each element in the array is an object representing a time-of-day/day-of-week pair.
+
+        * Element fields
+
+            * `count`: Int
+
+            * `dow`: Int
+
+                * Starts counting at 1, corresponding to Sunday
+
+            * `tod`: Int
+
+                * Starts counting at 0, corresponding to the hour from 00:00 - 01:00.
+
+    * `/api/records/recent_counts/`
+
+        * Returns an aggregation of the number of matching Records over the past 30, 90, and 365 days.
+
+        * Results fields
+
+            * `month`: Int
+
+            * `quarter`: Int
+
+            * `year`: Int
+
+    * `/api/records/crosstabs/`
+
+        * A more generalized version of the ToD-DoW endpoint: returns an aggregated table of the matching Records broken out along user-configurable dimensions
+
+        * This endpoint accepts all the query parameters accepted by the other aggregation endpoints, but requires additional query parameters and also allows optional additional query parameters.
+
+        * Additional Query Parameters
+
+            * Exactly **one** of the following; determines what each row in the resulting table should be
+
+                * `row_period_type`: ['hour' | 'day' | 'week_day' | 'week' | 'month' | 'year' ]
+
+                    * 'day' corresponds to day-of-month
+
+                * `row_boundary_id`: UUID
+
+                    * Each Polygon within the Boundary (for example, municipal districts within a city boundary) will be a row in the table
+
+                * `row_choices_path`: String
+
+                    * Directs the endpoint to use a schema property which is an enumeration of choices as rows in the table. Only Record Schema properties containing the 'enum' key are valid for this parameter. The path is the object path to the property, with each path component separated by a comma. For example, `&row_choices_path=crashDetails,properties,Collision%20type` would cause the endpoint to search for an enumeration at the following path: `
 {
-	"email": "test@gmail.com",
-	"name": "test",
-	"groups": ["public"]
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/auth-api/user-info/2/
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "data": [
-      {
-        "groupdetail": [
-          2
-        ],
-        "token": "cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx8",
-        "id": 2,
-        "first_name": "",
-        "last_name": "",
-        "username": "demo",
-        "email": "test@gmail.com",
-        "groups": [
-          "admin"
-        ],
-        "is_staff": true,
-        "is_superuser": true,
-        "is_active": true,
-        "date_joined": "2018-01-22T21:35:57Z"
-      }
-    ],
-    "message": "success",
-    "status": true
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/get-group-permissions/
-
-**METHOD**
-
-  POST
-
-**DATA PARAMS**
-
-{
-  "codename": [
-    "add_record",
-    "change_recordduplicate",
-    "add_sendrolerequest",
-    "view_recordduplicate",
-    "view_recordauditlogentry",
-    "change_record",
-    "view_record"
-  ],
-  "user": xxxx
-}
-
-**RESPONSE**
-
-[
-  {
-    "codename": "add_record",
-    "status": "true"
-  },
-  {
-    "codename": "change_recordduplicate",
-    "status": "true"
-  },
-  {
-    "codename": "add_sendrolerequest",
-    "status": "true"
-  },
-  {
-    "codename": "view_recordduplicate",
-    "status": "true"
-  },
-  {
-    "codename": "view_recordauditlogentry",
-    "status": "true"
-  },
-  {
-    "codename": "change_record",
-    "status": "true"
-  },
-  {
-    "codename": "view_record",
-    "status": "true"
-  }
-]
-
-#######ASHLAR EDITOR
-
-**URL**
-
-http://{{ip}}:{{port}}/api/country-info/
-
-**Data Params**
-
-{
-    "country_code": "NZ",
-    "country_name": "New Zealand",
-    "latitude": 12.4394739437943,
-    "longitude": 134.8948934839
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/language-details/
-
-**METHOD**
-
-  POST
-
-**Data Params**
-
-{
-    "label": "En",
-    "upload_for": "admin_panel",
-    "language_code": "en",
-    "csv_f": "application/vnd.ms-excel;base64",
-    "default_for_user_panel": false,
-    "default_for_admin_panel": true,
-    "archive": false
-}
-
-
-**URL**
-
-http://{{ip}}:{{port}}/auth-group/
-
-**METHOD**
-
-  POST
-
-**Data Params**
-
-{
-    "name": "Admin",
-    "description":"Group description",
-    "permissions": [41,42,43,44]
-}
-
-**Response**
-
-[
-  {
-    "data": {
-      "id": 6,
-      "name": "Admin",
-      "permissions": [
-        41,
-        42,
-        43,
-        44
-      ]
-    },
-    "message": "Data saved successfully",
-    "status": true
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/auth-api/driver-group/
-
-**METHOD**
-
-  POST
-
-**Data Params**
-
-{
-  "group": 6,
-  "name": "Admin",
-  "description": "Group Description"
-}
-
-**Response**
-
-[
-  {
-    "Data": {
-      "id": 50,
-      "name": "Admin",
-      "group": 6,
-      "description": "Group Description",
-      "is_admin": false
-    },
-    "message": "Data saved successfully",
-    "status": true
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/auth-api/weather-info/
-
-**METHOD**
-
-  POST
-
-**Data Params**
-
-{
-  "provider_name": "Openweather Map",
-  "client_id": "8XXXXXXXXXXXXXXXXXXXXX1",
-  "client_secret": "XXXX",
-  "is_active": true
-}
-
-**RESPONSE**
-
-{
-  "message": "Details added successfully",
-  "status": true
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/auth-api/weather-info/
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-{
-  "data": [
-    {
-      "id": 1,
-      "provider_name": "Openweather Map",
-      "client_id": "8XXXXXXXXXXXXXXXXXXXXX1",
-      "client_secret": "XXXX",
-      "is_active": false,
-      "created_at": "2021-07-05T11:35:54.517779Z",
-      "is_deleted": false
-    }
-  ],
-  "status": true
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/auth-api/weather-info-details/id/
-
-**METHOD**
-
-  DELETE
-
-**RESPONSE**
-
-[
-  {
-    "message": "Details deleted successfully",
-    "status": true
-  }
-]
-
-
-
-**URL**
-
-http://{{ip}}:{{port}}/api/weather-data-list/
-
-**METHOD**
-
-  POST
-
-**Data Params**
-
-{
-  "ids": [
-    2,
-    3,...
-  ]
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/weather-data-list/
-
-**METHOD**
-
-  GET
-
-
-**RESPONSE**
-
-[
-  {
-    "id": 1,
-    "label": "Clear day",
-    "value": "clear-day",
-    "active": true
-  },..........
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/recordtypes/
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "uuid": "1c04abed-f6ef-4ff0-87cd-734fbe4c767e",
-    "current_schema": "64ab35fc-b9bc-4eac-8200-ab1734131d4a",
-    "created": "2018-01-22T20:21:39.469095Z",
-    "modified": "2018-02-05T05:44:52.046693Z",
-    "label": "Incident",
-    "plural_label": "Incidents",
-    "description": "Incidents",
-    "active": true,
-    "geometry_type": "point",
-    "temporal": true
-  },
-  {
-    "uuid": "e83d8cc8-9bd5-406c-a471-a5e7e3b02386",
-    "current_schema": "b379f86c-917d-465e-8a05-d324d5d2670f",
-    "created": "2021-06-11T14:58:03.336278Z",
-    "modified": "2021-06-11T14:58:03.336313Z",
-    "label": "Intervention",
-    "plural_label": "Interventions",
-    "description": "Interventions",
-    "active": true,
-    "geometry_type": "point",
-    "temporal": true
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/data-api/bindcrashtype/uuid_of_recordtype/
-
-**METHOD**
-
-  GET
-
-**URL**
-
-http://{{ip}}:{{port}}/api/boundaries/
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "uuid": "fa146d5b-600c-4273-ad68-119f5c1d06ab",
-    "label": "City/Province",
-    "color": "red",
-    "display_field": "name",
-    "data_fields": [
-      "fips",
-      "name",
-      "note",
-      "type",
-      "admin",
-      "gn_id",
-      "gn_a3",
-      "abbrev",
-      "gns_id",
-      "iso_a2",
-      "postal",
-      "region",
-      "sov_a3",
-      "woe_id",
-      "adm0_a3",
-      "adm0_sr",
-      "diss_me",
-      "gn_name",
-      "type_en",
-      "check_me",
-      "datarank",
-      "fips_alt",
-      "geonunit",
-      "gn_level",
-      "gns_adm1",
-      "gns_lang",
-      "gns_name",
-      "latitude",
-      "name_alt",
-      "name_len",
-      "sub_code",
-      "woe_name",
-      "adm1_code",
-      "area_sqkm",
-      "code_hasc",
-      "gn_region",
-      "gns_level",
-      "labelrank",
-      "longitude",
-      "mapcolor9",
-      "scalerank",
-      "wikipedia",
-      "woe_label",
-      "objectid_1",
-      "adm0_label",
-      "adm1_cod_1",
-      "code_local",
-      "featurecla",
-      "gadm_level",
-      "gn_a1_code",
-      "gns_region",
-      "hasc_maybe",
-      "iso_3166_2",
-      "mapcolor13",
-      "name_local",
-      "provnum_ne",
-      "region_cod",
-      "region_sub",
-      "sameascity",
-      "uuid"
-    ],
-    "errors": null,
-    "created": "2021-07-05T08:24:14.901907Z",
-    "modified": "2021-07-05T08:25:09.549569Z",
-    "status": "COMPLETE",
-    "source_file": "http://localhost/api/boundaries/boundaries/2021/07/05/city_new.zip"
-  },
-  {
-    "uuid": "45e1fb55-b1af-4d0f-b1a1-60d9f5a253d7",
-    "label": "States",
-    "color": "red",
-    "display_field": "NAME_1",
-    "data_fields": [
-      "ID_0",
-      "ISO",
-      "NAME_0",
-      "ID_1",
-      "NAME_1",
-      "TYPE_1",
-      "ENGTYPE_1",
-      "NL_NAME_1",
-      "VARNAME_1"
-    ],
-    "errors": null,
-    "created": "2018-01-22T20:27:31.668576Z",
-    "modified": "2018-07-06T07:06:52.852305Z",
-    "status": "COMPLETE",
-    "source_file": "http://localost/api/boundaries/boundaries/2018/01/23/IND_adm.zip"
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/auth-group/
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "data": [
-      {
-        "id": 2,
-        "name": "admin",
-        "permissions": [
-          {
-            "id": 1,
-            "name": "Can add log entry",
-            "content_type": 1,
-            "codename": "add_logentry"
-          },
-          {
-            "id": 2,
-            "name": "Can change log entry",
-            "content_type": 1,
-            "codename": "change_logentry"
-          },
-          {
-            "id": 3,
-            "name": "Can delete log entry",
-            "content_type": 1,
-            "codename": "delete_logentry"
-          },
-          {
-            "id": 4,
-            "name": "Can view log entry",
-            "content_type": 1,
-            "codename": "view_logentry"
-          },
-          {
-            "id": 9,
-            "name": "Can add group",
-            "content_type": 3,
-            "codename": "add_group"
-          },
-          {
-            "id": 10,
-            "name": "Can change group",
-            "content_type": 3,
-            "codename": "change_group"
-          },
-          {
-            "id": 11,
-            "name": "Can delete group",
-            "content_type": 3,
-            "codename": "delete_group"
-          },
-          {
-            "id": 12,
-            "name": "Can view group",
-            "content_type": 3,
-            "codename": "view_group"
-          },
-          {
-            "id": 5,
-            "name": "Can add permission",
-            "content_type": 2,
-            "codename": "add_permission"
-          },
-          {
-            "id": 6,
-            "name": "Can change permission",
-            "content_type": 2,
-            "codename": "change_permission"
-          },
-          {
-            "id": 7,
-            "name": "Can delete permission",
-            "content_type": 2,
-            "codename": "delete_permission"
-          },
-          {
-            "id": 8,
-            "name": "Can view permission",
-            "content_type": 2,
-            "codename": "view_permission"
-          },
-          {
-            "id": 13,
-            "name": "Can add user",
-            "content_type": 4,
-            "codename": "add_user"
-          },
-          {
-            "id": 14,
-            "name": "Can change user",
-            "content_type": 4,
-            "codename": "change_user"
-          },
-          {
-            "id": 15,
-            "name": "Can delete user",
-            "content_type": 4,
-            "codename": "delete_user"
-          },
-          {
-            "id": 16,
-            "name": "Can view user",
-            "content_type": 4,
-            "codename": "view_user"
-          },
-          {
-            "id": 29,
-            "name": "Can add Token",
-            "content_type": 8,
-            "codename": "add_token"
-          },
-          {
-            "id": 30,
-            "name": "Can change Token",
-            "content_type": 8,
-            "codename": "change_token"
-          },
-          {
-            "id": 31,
-            "name": "Can delete Token",
-            "content_type": 8,
-            "codename": "delete_token"
-          },
-          {
-            "id": 32,
-            "name": "Can view Token",
-            "content_type": 8,
-            "codename": "view_token"
-          },
-          {
-            "id": 133,
-            "name": "Can add black spot",
-            "content_type": 34,
-            "codename": "add_blackspot"
-          },
-          {
-            "id": 134,
-            "name": "Can change black spot",
-            "content_type": 34,
-            "codename": "change_blackspot"
-          },
-          {
-            "id": 135,
-            "name": "Can delete black spot",
-            "content_type": 34,
-            "codename": "delete_blackspot"
-          },
-          {
-            "id": 136,
-            "name": "Can view black spot",
-            "content_type": 34,
-            "codename": "view_blackspot"
-          },
-          {
-            "id": 137,
-            "name": "Can add black spot config",
-            "content_type": 35,
-            "codename": "add_blackspotconfig"
-          },
-          {
-            "id": 138,
-            "name": "Can change black spot config",
-            "content_type": 35,
-            "codename": "change_blackspotconfig"
-          },
-          {
-            "id": 139,
-            "name": "Can delete black spot config",
-            "content_type": 35,
-            "codename": "delete_blackspotconfig"
-          },
-          {
-            "id": 140,
-            "name": "Can view black spot config",
-            "content_type": 35,
-            "codename": "view_blackspotconfig"
-          },
-          {
-            "id": 141,
-            "name": "Can add black spot records file",
-            "content_type": 36,
-            "codename": "add_blackspotrecordsfile"
-          },
-          {
-            "id": 142,
-            "name": "Can change black spot records file",
-            "content_type": 36,
-            "codename": "change_blackspotrecordsfile"
-          },
-          {
-            "id": 143,
-            "name": "Can delete black spot records file",
-            "content_type": 36,
-            "codename": "delete_blackspotrecordsfile"
-          },
-          {
-            "id": 144,
-            "name": "Can view black spot records file",
-            "content_type": 36,
-            "codename": "view_blackspotrecordsfile"
-          },
-          {
-            "id": 145,
-            "name": "Can add black spot set",
-            "content_type": 37,
-            "codename": "add_blackspotset"
-          },
-          {
-            "id": 146,
-            "name": "Can change black spot set",
-            "content_type": 37,
-            "codename": "change_blackspotset"
-          },
-          {
-            "id": 147,
-            "name": "Can delete black spot set",
-            "content_type": 37,
-            "codename": "delete_blackspotset"
-          },
-          {
-            "id": 148,
-            "name": "Can view black spot set",
-            "content_type": 37,
-            "codename": "view_blackspotset"
-          },
-          {
-            "id": 149,
-            "name": "Can add black spot training csv",
-            "content_type": 38,
-            "codename": "add_blackspottrainingcsv"
-          },
-          {
-            "id": 150,
-            "name": "Can change black spot training csv",
-            "content_type": 38,
-            "codename": "change_blackspottrainingcsv"
-          },
-          {
-            "id": 151,
-            "name": "Can delete black spot training csv",
-            "content_type": 38,
-            "codename": "delete_blackspottrainingcsv"
-          },
-          {
-            "id": 152,
-            "name": "Can view black spot training csv",
-            "content_type": 38,
-            "codename": "view_blackspottrainingcsv"
-          },
-          {
-            "id": 153,
-            "name": "Can add load forecast training csv",
-            "content_type": 39,
-            "codename": "add_loadforecasttrainingcsv"
-          },
-          {
-            "id": 154,
-            "name": "Can change load forecast training csv",
-            "content_type": 39,
-            "codename": "change_loadforecasttrainingcsv"
-          },
-          {
-            "id": 155,
-            "name": "Can delete load forecast training csv",
-            "content_type": 39,
-            "codename": "delete_loadforecasttrainingcsv"
-          },
-          {
-            "id": 156,
-            "name": "Can view load forecast training csv",
-            "content_type": 39,
-            "codename": "view_loadforecasttrainingcsv"
-          },
-          {
-            "id": 157,
-            "name": "Can add road segments shapefile",
-            "content_type": 40,
-            "codename": "add_roadsegmentsshapefile"
-          },
-          {
-            "id": 158,
-            "name": "Can change road segments shapefile",
-            "content_type": 40,
-            "codename": "change_roadsegmentsshapefile"
-          },
-          {
-            "id": 159,
-            "name": "Can delete road segments shapefile",
-            "content_type": 40,
-            "codename": "delete_roadsegmentsshapefile"
-          },
-          {
-            "id": 160,
-            "name": "Can view road segments shapefile",
-            "content_type": 40,
-            "codename": "view_roadsegmentsshapefile"
-          },
-          {
-            "id": 17,
-            "name": "Can add content type",
-            "content_type": 5,
-            "codename": "add_contenttype"
-          },
-          {
-            "id": 18,
-            "name": "Can change content type",
-            "content_type": 5,
-            "codename": "change_contenttype"
-          },
-          {
-            "id": 19,
-            "name": "Can delete content type",
-            "content_type": 5,
-            "codename": "delete_contenttype"
-          },
-          {
-            "id": 20,
-            "name": "Can view content type",
-            "content_type": 5,
-            "codename": "view_contenttype"
-          },
-          {
-            "id": 81,
-            "name": "Can add bulk upload detail",
-            "content_type": 21,
-            "codename": "add_bulkuploaddetail"
-          },
-          {
-            "id": 82,
-            "name": "Can change bulk upload detail",
-            "content_type": 21,
-            "codename": "change_bulkuploaddetail"
-          },
-          {
-            "id": 83,
-            "name": "Can delete bulk upload detail",
-            "content_type": 21,
-            "codename": "delete_bulkuploaddetail"
-          },
-          {
-            "id": 84,
-            "name": "Can view bulk upload detail",
-            "content_type": 21,
-            "codename": "view_bulkuploaddetail"
-          },
-          {
-            "id": 85,
-            "name": "Can add crash diagram orientation",
-            "content_type": 22,
-            "codename": "add_crashdiagramorientation"
-          },
-          {
-            "id": 86,
-            "name": "Can change crash diagram orientation",
-            "content_type": 22,
-            "codename": "change_crashdiagramorientation"
-          },
-          {
-            "id": 87,
-            "name": "Can delete crash diagram orientation",
-            "content_type": 22,
-            "codename": "delete_crashdiagramorientation"
-          },
-          {
-            "id": 88,
-            "name": "Can view crash diagram orientation",
-            "content_type": 22,
-            "codename": "view_crashdiagramorientation"
-          },
-          {
-            "id": 89,
-            "name": "Can add dedupe job",
-            "content_type": 23,
-            "codename": "add_dedupejob"
-          },
-          {
-            "id": 90,
-            "name": "Can change dedupe job",
-            "content_type": 23,
-            "codename": "change_dedupejob"
-          },
-          {
-            "id": 91,
-            "name": "Can delete dedupe job",
-            "content_type": 23,
-            "codename": "delete_dedupejob"
-          },
-          {
-            "id": 92,
-            "name": "Can view dedupe job",
-            "content_type": 23,
-            "codename": "view_dedupejob"
-          },
-          {
-            "id": 93,
-            "name": "Can add driver record",
-            "content_type": 24,
-            "codename": "add_driverrecord"
-          },
-          {
-            "id": 94,
-            "name": "Can change driver record",
-            "content_type": 24,
-            "codename": "change_driverrecord"
-          },
-          {
-            "id": 95,
-            "name": "Can delete driver record",
-            "content_type": 24,
-            "codename": "delete_driverrecord"
-          },
-          {
-            "id": 96,
-            "name": "Can view driver record",
-            "content_type": 24,
-            "codename": "view_driverrecord"
-          },
-          {
-            "id": 97,
-            "name": "Can add driver record copy",
-            "content_type": 25,
-            "codename": "add_driverrecordcopy"
-          },
-          {
-            "id": 98,
-            "name": "Can change driver record copy",
-            "content_type": 25,
-            "codename": "change_driverrecordcopy"
-          },
-          {
-            "id": 99,
-            "name": "Can delete driver record copy",
-            "content_type": 25,
-            "codename": "delete_driverrecordcopy"
-          },
-          {
-            "id": 100,
-            "name": "Can view driver record copy",
-            "content_type": 25,
-            "codename": "view_driverrecordcopy"
-          },
-          {
-            "id": 101,
-            "name": "Can add duplicate distance config",
-            "content_type": 26,
-            "codename": "add_duplicatedistanceconfig"
-          },
-          {
-            "id": 102,
-            "name": "Can change duplicate distance config",
-            "content_type": 26,
-            "codename": "change_duplicatedistanceconfig"
-          },
-          {
-            "id": 103,
-            "name": "Can delete duplicate distance config",
-            "content_type": 26,
-            "codename": "delete_duplicatedistanceconfig"
-          },
-          {
-            "id": 104,
-            "name": "Can view duplicate distance config",
-            "content_type": 26,
-            "codename": "view_duplicatedistanceconfig"
-          },
-          {
-            "id": 105,
-            "name": "Can add irap detail",
-            "content_type": 27,
-            "codename": "add_irapdetail"
-          },
-          {
-            "id": 106,
-            "name": "Can change irap detail",
-            "content_type": 27,
-            "codename": "change_irapdetail"
-          },
-          {
-            "id": 107,
-            "name": "Can delete irap detail",
-            "content_type": 27,
-            "codename": "delete_irapdetail"
-          },
-          {
-            "id": 108,
-            "name": "Can view irap detail",
-            "content_type": 27,
-            "codename": "view_irapdetail"
-          },
-          {
-            "id": 129,
-            "name": "Can add key detail",
-            "content_type": 33,
-            "codename": "add_keydetail"
-          },
-          {
-            "id": 130,
-            "name": "Can change key detail",
-            "content_type": 33,
-            "codename": "change_keydetail"
-          },
-          {
-            "id": 131,
-            "name": "Can delete key detail",
-            "content_type": 33,
-            "codename": "delete_keydetail"
-          },
-          {
-            "id": 132,
-            "name": "Can view key detail",
-            "content_type": 33,
-            "codename": "view_keydetail"
-          },
-          {
-            "id": 109,
-            "name": "Can add record audit log entry",
-            "content_type": 28,
-            "codename": "add_recordauditlogentry"
-          },
-          {
-            "id": 110,
-            "name": "Can change record audit log entry",
-            "content_type": 28,
-            "codename": "change_recordauditlogentry"
-          },
-          {
-            "id": 111,
-            "name": "Can delete record audit log entry",
-            "content_type": 28,
-            "codename": "delete_recordauditlogentry"
-          },
-          {
-            "id": 112,
-            "name": "Can view record audit log entry",
-            "content_type": 28,
-            "codename": "view_recordauditlogentry"
-          },
-          {
-            "id": 113,
-            "name": "Can add record cost config",
-            "content_type": 29,
-            "codename": "add_recordcostconfig"
-          },
-          {
-            "id": 114,
-            "name": "Can change record cost config",
-            "content_type": 29,
-            "codename": "change_recordcostconfig"
-          },
-          {
-            "id": 115,
-            "name": "Can delete record cost config",
-            "content_type": 29,
-            "codename": "delete_recordcostconfig"
-          },
-          {
-            "id": 116,
-            "name": "Can view record cost config",
-            "content_type": 29,
-            "codename": "view_recordcostconfig"
-          },
-          {
-            "id": 117,
-            "name": "Can add record duplicate",
-            "content_type": 30,
-            "codename": "add_recordduplicate"
-          },
-          {
-            "id": 118,
-            "name": "Can change record duplicate",
-            "content_type": 30,
-            "codename": "change_recordduplicate"
-          },
-          {
-            "id": 119,
-            "name": "Can delete record duplicate",
-            "content_type": 30,
-            "codename": "delete_recordduplicate"
-          },
-          {
-            "id": 120,
-            "name": "Can view record duplicate",
-            "content_type": 30,
-            "codename": "view_recordduplicate"
-          },
-          {
-            "id": 121,
-            "name": "Can add weather data list",
-            "content_type": 31,
-            "codename": "add_weatherdatalist"
-          },
-          {
-            "id": 122,
-            "name": "Can change weather data list",
-            "content_type": 31,
-            "codename": "change_weatherdatalist"
-          },
-          {
-            "id": 123,
-            "name": "Can delete weather data list",
-            "content_type": 31,
-            "codename": "delete_weatherdatalist"
-          },
-          {
-            "id": 124,
-            "name": "Can view weather data list",
-            "content_type": 31,
-            "codename": "view_weatherdatalist"
-          },
-          {
-            "id": 125,
-            "name": "Can add weather info",
-            "content_type": 32,
-            "codename": "add_weatherinfo"
-          },
-          {
-            "id": 126,
-            "name": "Can change weather info",
-            "content_type": 32,
-            "codename": "change_weatherinfo"
-          },
-          {
-            "id": 127,
-            "name": "Can delete weather info",
-            "content_type": 32,
-            "codename": "delete_weatherinfo"
-          },
-          {
-            "id": 128,
-            "name": "Can view weather info",
-            "content_type": 32,
-            "codename": "view_weatherinfo"
-          },
-          {
-            "id": 53,
-            "name": "Can add city",
-            "content_type": 14,
-            "codename": "add_city"
-          },
-          {
-            "id": 54,
-            "name": "Can change city",
-            "content_type": 14,
-            "codename": "change_city"
-          },
-          {
-            "id": 55,
-            "name": "Can delete city",
-            "content_type": 14,
-            "codename": "delete_city"
-          },
-          {
-            "id": 56,
-            "name": "Can view city",
-            "content_type": 14,
-            "codename": "view_city"
-          },
-          {
-            "id": 57,
-            "name": "Can add country info",
-            "content_type": 15,
-            "codename": "add_countryinfo"
-          },
-          {
-            "id": 58,
-            "name": "Can change country info",
-            "content_type": 15,
-            "codename": "change_countryinfo"
-          },
-          {
-            "id": 59,
-            "name": "Can delete country info",
-            "content_type": 15,
-            "codename": "delete_countryinfo"
-          },
-          {
-            "id": 60,
-            "name": "Can view country info",
-            "content_type": 15,
-            "codename": "view_countryinfo"
-          },
-          {
-            "id": 61,
-            "name": "Can add groupdetail",
-            "content_type": 16,
-            "codename": "add_groupdetail"
-          },
-          {
-            "id": 62,
-            "name": "Can change groupdetail",
-            "content_type": 16,
-            "codename": "change_groupdetail"
-          },
-          {
-            "id": 63,
-            "name": "Can delete groupdetail",
-            "content_type": 16,
-            "codename": "delete_groupdetail"
-          },
-          {
-            "id": 64,
-            "name": "Can view groupdetail",
-            "content_type": 16,
-            "codename": "view_groupdetail"
-          },
-          {
-            "id": 65,
-            "name": "Can add language detail",
-            "content_type": 17,
-            "codename": "add_languagedetail"
-          },
-          {
-            "id": 66,
-            "name": "Can change language detail",
-            "content_type": 17,
-            "codename": "change_languagedetail"
-          },
-          {
-            "id": 67,
-            "name": "Can delete language detail",
-            "content_type": 17,
-            "codename": "delete_languagedetail"
-          },
-          {
-            "id": 68,
-            "name": "Can view language detail",
-            "content_type": 17,
-            "codename": "view_languagedetail"
-          },
-          {
-            "id": 69,
-            "name": "Can add organization",
-            "content_type": 18,
-            "codename": "add_organization"
-          },
-          {
-            "id": 70,
-            "name": "Can change organization",
-            "content_type": 18,
-            "codename": "change_organization"
-          },
-          {
-            "id": 71,
-            "name": "Can delete organization",
-            "content_type": 18,
-            "codename": "delete_organization"
-          },
-          {
-            "id": 72,
-            "name": "Can view organization",
-            "content_type": 18,
-            "codename": "view_organization"
-          },
-          {
-            "id": 77,
-            "name": "Can add user detail",
-            "content_type": 20,
-            "codename": "add_userdetail"
-          },
-          {
-            "id": 78,
-            "name": "Can change user detail",
-            "content_type": 20,
-            "codename": "change_userdetail"
-          },
-          {
-            "id": 79,
-            "name": "Can delete user detail",
-            "content_type": 20,
-            "codename": "delete_userdetail"
-          },
-          {
-            "id": 80,
-            "name": "Can view user detail",
-            "content_type": 20,
-            "codename": "view_userdetail"
-          },
-          {
-            "id": 33,
-            "name": "Can add Boundary",
-            "content_type": 9,
-            "codename": "add_boundary"
-          },
-          {
-            "id": 34,
-            "name": "Can change Boundary",
-            "content_type": 9,
-            "codename": "change_boundary"
-          },
-          {
-            "id": 35,
-            "name": "Can delete Boundary",
-            "content_type": 9,
-            "codename": "delete_boundary"
-          },
-          {
-            "id": 36,
-            "name": "Can view Boundary",
-            "content_type": 9,
-            "codename": "view_boundary"
-          },
-          {
-            "id": 37,
-            "name": "Can add Boundary Polygon",
-            "content_type": 10,
-            "codename": "add_boundarypolygon"
-          },
-          {
-            "id": 38,
-            "name": "Can change Boundary Polygon",
-            "content_type": 10,
-            "codename": "change_boundarypolygon"
-          },
-          {
-            "id": 39,
-            "name": "Can delete Boundary Polygon",
-            "content_type": 10,
-            "codename": "delete_boundarypolygon"
-          },
-          {
-            "id": 40,
-            "name": "Can view Boundary Polygon",
-            "content_type": 10,
-            "codename": "view_boundarypolygon"
-          },
-          {
-            "id": 41,
-            "name": "Can add record",
-            "content_type": 11,
-            "codename": "add_record"
-          },
-          {
-            "id": 42,
-            "name": "Can change record",
-            "content_type": 11,
-            "codename": "change_record"
-          },
-          {
-            "id": 43,
-            "name": "Can delete record",
-            "content_type": 11,
-            "codename": "delete_record"
-          },
-          {
-            "id": 44,
-            "name": "Can view record",
-            "content_type": 11,
-            "codename": "view_record"
-          },
-          {
-            "id": 45,
-            "name": "Can add record schema",
-            "content_type": 12,
-            "codename": "add_recordschema"
-          },
-          {
-            "id": 46,
-            "name": "Can change record schema",
-            "content_type": 12,
-            "codename": "change_recordschema"
-          },
-          {
-            "id": 47,
-            "name": "Can delete record schema",
-            "content_type": 12,
-            "codename": "delete_recordschema"
-          },
-          {
-            "id": 48,
-            "name": "Can view record schema",
-            "content_type": 12,
-            "codename": "view_recordschema"
-          },
-          {
-            "id": 49,
-            "name": "Can add record type",
-            "content_type": 13,
-            "codename": "add_recordtype"
-          },
-          {
-            "id": 50,
-            "name": "Can change record type",
-            "content_type": 13,
-            "codename": "change_recordtype"
-          },
-          {
-            "id": 51,
-            "name": "Can delete record type",
-            "content_type": 13,
-            "codename": "delete_recordtype"
-          },
-          {
-            "id": 52,
-            "name": "Can view record type",
-            "content_type": 13,
-            "codename": "view_recordtype"
-          },
-          {
-            "id": 21,
-            "name": "Can add session",
-            "content_type": 6,
-            "codename": "add_session"
-          },
-          {
-            "id": 22,
-            "name": "Can change session",
-            "content_type": 6,
-            "codename": "change_session"
-          },
-          {
-            "id": 23,
-            "name": "Can delete session",
-            "content_type": 6,
-            "codename": "delete_session"
-          },
-          {
-            "id": 24,
-            "name": "Can view session",
-            "content_type": 6,
-            "codename": "view_session"
-          },
-          {
-            "id": 25,
-            "name": "Can add site",
-            "content_type": 7,
-            "codename": "add_site"
-          },
-          {
-            "id": 26,
-            "name": "Can change site",
-            "content_type": 7,
-            "codename": "change_site"
-          },
-          {
-            "id": 27,
-            "name": "Can delete site",
-            "content_type": 7,
-            "codename": "delete_site"
-          },
-          {
-            "id": 28,
-            "name": "Can view site",
-            "content_type": 7,
-            "codename": "view_site"
-          },
-          {
-            "id": 161,
-            "name": "Can add saved filter",
-            "content_type": 41,
-            "codename": "add_savedfilter"
-          },
-          {
-            "id": 162,
-            "name": "Can change saved filter",
-            "content_type": 41,
-            "codename": "change_savedfilter"
-          },
-          {
-            "id": 163,
-            "name": "Can delete saved filter",
-            "content_type": 41,
-            "codename": "delete_savedfilter"
-          },
-          {
-            "id": 164,
-            "name": "Can view saved filter",
-            "content_type": 41,
-            "codename": "view_savedfilter"
-          }
-        ]
-      },
-      {
-        "id": 3,
-        "name": "analyst",
-        "permissions": []
-      },
-      {
-        "id": 6,
-        "name": "Group1",
-        "permissions": [
-          {
-            "id": 1,
-            "name": "Can add log entry",
-            "content_type": 1,
-            "codename": "add_logentry"
-          },
-          {
-            "id": 2,
-            "name": "Can change log entry",
-            "content_type": 1,
-            "codename": "change_logentry"
-          },
-          {
-            "id": 3,
-            "name": "Can delete log entry",
-            "content_type": 1,
-            "codename": "delete_logentry"
-          },
-          {
-            "id": 4,
-            "name": "Can view log entry",
-            "content_type": 1,
-            "codename": "view_logentry"
-          },
-          {
-            "id": 5,
-            "name": "Can add permission",
-            "content_type": 2,
-            "codename": "add_permission"
-          },
-          {
-            "id": 6,
-            "name": "Can change permission",
-            "content_type": 2,
-            "codename": "change_permission"
-          },
-          {
-            "id": 7,
-            "name": "Can delete permission",
-            "content_type": 2,
-            "codename": "delete_permission"
-          },
-          {
-            "id": 8,
-            "name": "Can view permission",
-            "content_type": 2,
-            "codename": "view_permission"
-          }
-        ]
-      },
-      {
-        "id": 1,
-        "name": "Public",
-        "permissions": [
-          {
-            "id": 73,
-            "name": "Can add send role request",
-            "content_type": 19,
-            "codename": "add_sendrolerequest"
-          },
-          {
-            "id": 74,
-            "name": "Can change send role request",
-            "content_type": 19,
-            "codename": "change_sendrolerequest"
-          },
-          {
-            "id": 75,
-            "name": "Can delete send role request",
-            "content_type": 19,
-            "codename": "delete_sendrolerequest"
-          },
-          {
-            "id": 76,
-            "name": "Can view send role request",
-            "content_type": 19,
-            "codename": "view_sendrolerequest"
-          },
-          {
-            "id": 164,
-            "name": "Can view saved filter",
-            "content_type": 41,
-            "codename": "view_savedfilter"
-          }
-        ]
-      }
-    ],
-    "status": "true"
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/country-info/?archived=true
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "id": 2,
-    "country_code": "in",
-    "country_name": "India",
-    "archived": true,
-    "latitude": 19.80805412808859,
-    "longitude": 73.21289062500001
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/dedupe-config/
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "id": 1,
-    "dedupe_distance_threshold": 0.0009,
-    "unit": "degree",
-    "created": "2020-07-30T08:11:42.706240Z",
-    "modified": "2020-07-30T08:11:42.706240Z"
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/dedupe-config/id/
-
-**METHOD**
-
-  PATCH
-
-**RESPONSE**
-
-[
-  {
-    "id": 1,
-    "dedupe_distance_threshold": 0.0009,
-    "unit": "degree",
-    "created": "2020-07-30T08:11:42.706240Z",
-    "modified": "2020-07-30T08:11:42.706240Z"
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/bulk-upload-details/
-
-**METHOD**
-
-  GET
-  
-**RESPONSE**
-
-[
-  {
-    "id": 5,
-    "file_name": "1623850491.csv",
-    "file_status": "COMPLETED",
-    "csv_uploaded_date": "2021-06-16T13:34:51.655485Z",
-    "record_type": "Incident"
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/bulkupload/
-
-**METHOD**
-
-  POST
-
-**DATA PARAMS**
-
-{
-  "jsondata": "data:text/csv;base64,base_64goes_here",
-  "upload_for": "incident",
-  "record_type": "1c04abed-f6ef-4ff0-87cd-734fbe4c767e"
-}
-
-**RESPONSE**
-
-{
-  "data": {},
-  "message": "All Data is Correct",
-  "status": true
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/blackspotconfig/?limit=all
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "uuid": "43eb74b8-26bd-4561-8ed7-fb5be5a8352b",
-    "created": "2016-05-24T19:19:56.339703Z",
-    "modified": "2018-01-23T02:38:07.272030Z",
-    "severity_percentile_threshold": 0.95
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/blackspotconfig/uuid/
-
-**METHOD**
-
-  PATCH
-
-**DATA PARAMS**
-
-{
-  "severity_percentile_threshold": 0.95
-}
-
-**RESPONSE**
-
-{
-  "uuid": "43eb74b8-26bd-4561-8ed7-fb5be5a8352b",
-  "created": "2016-05-24T19:19:56.339703Z",
-  "modified": "2021-07-08T07:01:47.754287Z",
-  "severity_percentile_threshold": 0.95
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/recordtypes/
-
-**METHOD**
-
-  POST
-
-**REPSONSE**
-
-{
-  "uuid": "83884189-dc84-46d3-ac64-6932d3638483",
-  "current_schema": null,
-  "created": "2021-07-08T09:19:53.888783Z",
-  "modified": "2021-07-08T09:19:53.888832Z",
-  "label": "Incident1",
-  "plural_label": "Incident1",
-  "description": "Incidents",
-  "active": true,
-  "geometry_type": "point",
-  "temporal": true
-}
-**URL**
-
-http://{{ip}}:{{port}}/api/recordtypes/8xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx3/
-
-**METHOD**
-
-  DELETE
-
-**URL**
-
-http://{{ip}}:{{port}}/data-api/latestrecordschema/
-
-**METHOD**
-
-  POST
-
-**RESPONSE**
-
-{
-  "result": [
-    {
-      "uuid": "b379f86c-917d-465e-8a05-d324d5d2670f",
-      "created": "2021-06-11T14:58:03.534143Z",
-      "modified": "2021-06-11T14:58:03.534179Z",
-      "version": 1,
-      "schema": {
-        "type": "object",
-        "title": "",
-        "$schema": "http://json-schema.org/draft-04/schema#",
+    "crashDetails": {
         "properties": {
-          "driverInterventionDetails": {
-            "$ref": "#/definitions/driverInterventionDetails",
-            "options": {
-              "collapsed": true
-            },
-            "propertyOrder": 0
-          }
-        },
-        "definitions": {
-          "driverInterventionDetails": {
-            "type": "object",
-            "title": "Intervention Details",
-            "details": true,
-            "multiple": false,
-            "properties": {},
-            "definitions": {},
-            "description": "Details for Intervention",
-            "plural_title": "Intervention Details"
-          }
-        },
-        "description": "",
-        "record_type": "e83d8cc8-9bd5-406c-a471-a5e7e3b02386",
-        "plural_title": ""
-      },
-      "next_version_id": null,
-      "record_type_id": "exxxx-xxxx-xxxx-xxxxxxx-xxxxxxxxx6"
-    }
-  ]
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/recordschemas/fxxxxxx-xxxx-xxx-xxxx-xxxxxxxx7/
-
-**METHOD**
-
-  GET
-
-**URL**
-
-http://{{ip}}:{{port}}/api/language-details/?archive=False
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "id": 2,
-    "label": "English",
-    "csv_file": "http://localhost/download/multi-language/ashlar-editor/language-csv/en.csv",
-    "json_file": "/var/www/static/media/multi-language/ashlar-editor/language-json/en.json",
-    "language_code": "en",
-    "upload_for": "admin_panel",
-    "default_for_user_panel": false,
-    "default_for_admin_panel": true,
-    "archive": false,
-    "created_date": "2021-05-01T09:36:08.107228Z",
-    "updated_date": "2021-06-11T14:51:14.823704Z"
-  }......
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/language-details/2/
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-{
-  "id": 2,
-  "label": "English",
-  "csv_file": "http://localhost/download/multi-language/ashlar-editor/language-csv/en.csv",
-  "json_file": "/var/www/static/media/multi-language/ashlar-editor/language-json/en.json",
-  "language_code": "en",
-  "upload_for": "admin_panel",
-  "default_for_user_panel": false,
-  "default_for_admin_panel": true,
-  "archive": false,
-  "created_date": "2021-05-01T09:36:08.107228Z",
-  "updated_date": "2021-06-11T14:51:14.823704Z"
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/language-details/2/
-
-**METHOD**
-
-  PUT
-
-**DATA PARAMETERS**
-
-{
-  "id": "2",
-  "upload_for": "admin_panel",
-  "language_code": "en",
-  "label": "English",
-  "csv_f": "data:text/csv;base64,",
-  "default_for_user_panel": false,
-  "default_for_admin_panel": true
-}
-  
-**RESPONSE**
-
-{
-  "id": 2,
-  "label": "English",
-  "csv_file": "http://localhost/download/multi-language/ashlar-editor/language-csv/en.csv",
-  "json_file": "/var/www/static/media/multi-language/ashlar-editor/language-json/en.json",
-  "language_code": "en",
-  "upload_for": "admin_panel",
-  "default_for_user_panel": false,
-  "default_for_admin_panel": true,
-  "archive": false,
-  "created_date": "2021-05-01T09:36:08.107228Z",
-  "updated_date": "2021-07-08T09:32:11.979884Z"
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/lang-json/en/admin_panel/
-http://{{ip}}:{{port}}/api/lang-json/en/user_panel/
-
-**METHOD**
-
-  GET
-**RESPONSE**
-
-Returns translated text
-
-########USER PANEL
-
-**URL**
-
-http://{{ip}}:{{port}}/api/userfilters/
-
-**METHOD**
-
-  GET
-
-**URL**
-
-http://{{ip}}:{{port}}/api/boundarypolygons/?active=True&boundary=fa146d5b-600c-4273-ad68-119f5c1d06ab&limit=all&nogeom=true
-
-**METHOD**
-
-  GET
-
-**URL**
-
-http://{{ip}}:{{port}}api/records/toddow/?search=&archived=False&details_only=True&occurred_max=2021-07-08T09:36:23.462Z&occurred_min=2021-04-09T09:36:23.462Z&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e&jsonb=&polygon=
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-[
-  {
-    "dow": 6,
-    "tod": 10,
-    "count": 1
-  },
-  {
-    "dow": 6,
-    "tod": 16,
-    "count": 1
-  },
-  {
-    "dow": 1,
-    "tod": 20,
-    "count": 2
-  },
-  {
-    "dow": 2,
-    "tod": 20,
-    "count": 1
-  },
-  {
-    "dow": 6,
-    "tod": 20,
-    "count": 1
-  },
-  {
-    "dow": 7,
-    "tod": 20,
-    "count": 1
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/records/costs/?archived=False&occurred_min=2021-04-08T18:30:00.000Z&occurred_max=2021-07-08T09:36:23.464Z&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
-
-**METHOD**
-
-  GET
-
-**RESPONSE**
-
-{"prefix":"₹","suffix":"","total":"40,425,000","subtotals":{"Fatal":34650000,"Serious Injury":5775000,"Minor Injury":0,"Non Injury":0},"outdated_cost_config":false}
-
-
-**URL**
-
-http://{{ip}}:{{port}}/api/records/recent_counts/?archived=False&details_only=True&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
-
-**METHOD**
-
-  GET
-  
-**RESPONSE**
-
-{"month":7,"quarter":7,"year":929}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/blackspotsets/?effective_at=2021-07-08T09:36:23.469Z&limit=all&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e
-
-**METHOD**
-
-  GET
-  
-**RESPONSE**
-
-[
-  {
-    "uuid": "190bafe1-d4f7-48a2-b06c-cfe64edd3ec3",
-    "created": "2021-05-19T19:25:18.028812Z",
-    "modified": "2021-05-19T19:25:18.028849Z",
-    "effective_start": "2021-05-19T19:25:18.026185Z",
-    "effective_end": null,
-    "record_type": "1c04abed-f6ef-4ff0-87cd-734fbe4c767e"
-  }
-]
-
-**URL**
-
-http://{{ip}}:{{port}}/api/records/?archived=False&tilekey=true&polygon_id=&record_type=1c04abed-f6ef-4ff0-87cd-734fbe4c767e&occurred_min=2021-06-24T09:36:23.472Z
-
-**METHOD**
-
-  GET
-  
-**RESPONSE**
-
-{"tilekey":"0f4dc125-f581-430a-ab85-4c9e964858ea"}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/records/?details_only=True&search=&archived=False&limit=50&polygon_id=&polygon=&jsonb={%22driverIncidentDetails%22:{%22Severity%22:{%22_rule_type%22:%22containment%22,%22contains%22:[]}}}&polygon=&occurred_max=2021-07-08T09:58:44.071Z&occurred_min=2021-04-08T18:30:00.000Z&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&tilekey=false
-
-**METHOD**
-
-  GET
-  
-**RESPONSE**
-
-{
-  "count": 739,
-  "results": [
-    {
-      "uuid": "1b043f48-a08f-44ca-a600-c21c269fbfcc",
-      "data": {
-        "driverIncidentDetails": {
-          "Severity": [
-            "Property Damage"
-          ],
-          "_localId": "7cf621e1-51fd-42f8-ae69-8a3c898765c7",
-          "Main cause": "Human error",
-          "Description": "",
-          "Collision type": "Side swipe",
-          "Email of Encoder": "",
-          "Reporting Agency": "MMDA Metrobase",
-          "Location Approximate": []
+            "Collision type": { ... }
         }
-      },
-      "created_by": "metrobase8@gmail.com",
-      "created": "2021-07-08T03:53:06.255450Z",
-      "modified": "2021-07-08T03:53:06.255494Z",
-      "archived": false,
-      "occurred_from": "2021-07-08T01:35:13Z",
-      "occurred_to": "2021-07-08T03:50:13Z",
-      "geom": {
-        "type": "Point",
-        "coordinates": [
-          121.057036720306,
-          14.5857353
+    }
+}
+`
+Assuming a properly formatted enumeration is found at the path, each possible enumeration value will correspond to a row in the table.
+
+            * Exactly **one** of the following; these operate identically to the row parameters but determine columns instead:
+
+                * `col_period_type`: ['hour' | 'day' | 'week_day' | 'week' | 'month' | 'year' ]
+
+                * `col_boundary_id`: UUID
+
+                * `col_choices_path`: String
+
+            * The following **optional** query parameter is accepted:
+
+                * `aggregation_boundary`: UUID
+
+                    * Generates a separate **table** for each Polygon in the Boundary. The same Boundary should not be used as a row/column and an aggregation Boundary in the same request.
+
+        * Response format (if a field is listed as type "Array of Objects", then the subfields listed for that field correspond to the fields that each object in the array will have)
+
+            * `row_labels`: Array of Objects
+
+                * `key`: String
+
+                    * Unique key for this row; used to link cell data (see below) to the row / column it belongs in.
+
+                * `label`: Array of Objects
+
+                    * `text`: String
+
+                        * Text of the label. When translate (below) is True, this will be a key corresponding to a term, for example DAY.MONDAY, which is then translated client-side depending on the user's configured interface language.
+
+                    * `translate`: Boolean
+
+                        * Whether to translate this text client-side or display it as-is.
+
+            * `col_labels`: Array
+
+                * `key`: String
+
+                    * See `row_labels`, above
+
+                * `label`: Array
+
+                    * `text`: String
+
+                        * See `row_labels`, above
+
+                    * `translate`: Boolean
+
+                        * See `row_labels`, above
+
+            * `tables`: Array
+
+                * `tablekey`: String
+
+                    * Unique identifier for this table
+
+                * `row_totals`: Object
+
+                    * Each field in this object will correspond to the key of a row_label, above. Values correspond to totals. This dictionary is **sparse**, so if a key is not represented, its value is 0. Example (the keys are UUIDs of polygons):
+`
+"row_totals": {
+"96aeb5ca-d077-49fc-8e4d-ab00f96659f8": 4,
+"8e008134-df1e-4cb2-86b0-986164a19a71": 438,
+"01ed7d29-ea80-4ecf-a028-8ef8f08a5e54": 847,
+"379bcf7d-20cc-467b-8746-a5c84f905871": 78
+}
+`
+
+                * `data`: Object
+
+                    * Each field in this object corresponds to the key of a row_label, above. Values are objects providing totals for each column within that row, via the column_label key. As with row_totals, values are **sparse**. Example (the row keys are UUIDs of polygons, while the column keys are days of the week):
+`"data": {
+    "96aeb5ca-d077-49fc-8e4d-ab00f96659f8": {
+        "1": 1,
+        "2": 1
+        "5": 2
+    }
+}`
+
+                * `table_labels`: Object
+
+                    * Similarly to how `row_labels` and `col_labels` work, each key in this object corresponds to the tablekey of a table.
+
+* Detail: `/api/records/{uuid}/`
+
+**Query Parameters**
+All list and aggregation endpoints accept the same query parameters except where noted above.
+
+* `archived`: Boolean
+
+    * Records can be "archived" to denote that they should not be included in lists and calculations. Pass "True" to this parameter to return archived Records only; "False" to return un-archived only. Omitting this parameter returns both types.
+
+* `details_only`: Boolean
+
+    * Every Record is auto-generated with a "<record_type>Details" field which is intended to contain a basic summary of information about the Record. Passing "True" to this parameter will omit any other fields which exist on the Record. This is used on the list view to limit the size of the payload returned when only a summary view is needed.
+
+* `record_type`: UUID
+
+    * Limit the response to Records matching the passed Record Type. This is in theory optional but in practice **mandatory** -- it is very rare that it will be useful to return two different types of Records in a single request. It is usually a better idea to make a separate request for each Record Type.
+
+* `jsonb`: Object
+
+    * Query the data fields of the object and filter on the result.
+
+    * Keys in this object mimic the search paths to filter on a particular object field. However, in place of values, a filter rule definition is used. Example:
+`{ "accidentDetails": {
+    "Main+cause": {
+        "_rule_type": "containment",
+        "contains": [
+            "Vehicle+defect",
+            "Road+defect",
+            ["Vehicle+defect"],
+            ["Road+defect"]
         ]
-      },
-      "location_text": "SM Megamall Building A, SM Megamall, Wack-Wack Greenhills, Mandaluyong, 2nd District, NCR;MM, 1554, Luzon",
-      "weather": "scattered clouds",
-      "light": "",
-      "city": null,
-      "city_district": null,
-      "county": null,
-      "neighborhood": null,
-      "road": null,
-      "state": null,
-      "merged_and_updated": false,
-      "merged_uuid": null,
-      "uploaded_from": "Web",
-      "schema": "f825db2c-d182-4edc-8778-1b19452ed3b7"
-    },....
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/records/1b043f48-a08f-44ca-a600-c21c269fbfcc/
-
-**METHOD**
-
-  GET
-  
-**RESPONSE**
-
-{
-  "uuid": "1b043f48-a08f-44ca-a600-c21c269fbfcc",
-  "data": {
-    "driverNotes": {
-      "Notes": "",
-      "_localId": "08ad1959-50df-4683-9467-cb5bf07b130e"
     },
-    "driverPhoto": [],
-    "driverPerson": [],
-    "driverVehicle": [
-      {
-        "Make": "",
-        "Model": "",
-        "_localId": "674a612e-962c-49b8-84cd-d008991539ed",
-        "Plate number": "DAE 3909",
-        "Vehicle type": "Car",
-        "Engine number": "",
-        "Chassis number": "",
-        "Classification": "Private",
-        "Insurance details": ""
-      },
-      {
-        "Make": "",
-        "Model": "",
-        "_localId": "6af552c3-a6bf-4584-a449-43cbef692b56",
-        "Plate number": "DAN 1882",
-        "Vehicle type": "SUV",
-        "Engine number": "",
-        "Chassis number": "",
-        "Classification": "Private",
-        "Insurance details": ""
-      }
-    ],
-    "driverCrashDiagram": {
-      "Image": "",
-      "_localId": "b72a2bfa-e75e-4e7e-aa0f-31d75ca7e952",
-      "Movement Code": ""
-    },
-    "driverIncidentDetails": {
-      "Severity": [
-        "Property Damage"
-      ],
-      "_localId": "7cf621e1-51fd-42f8-ae69-8a3c898765c7",
-      "Main cause": "Human error",
-      "Description": "",
-      "Collision type": "Side swipe",
-      "Email of Encoder": "",
-      "Reporting Agency": "MMDA Metrobase",
-      "Location Approximate": []
+    "Num+driver+casualties": {
+        "_rule_type": "intrange",
+        "min": 1,
+        "max": 3
     }
-  },
-  "modified_by": "metrobase8@gmail.com",
-  "created": "2021-07-08T03:53:06.255450Z",
-  "modified": "2021-07-08T03:53:06.255494Z",
-  "archived": false,
-  "occurred_from": "2021-07-08T01:35:13Z",
-  "occurred_to": "2021-07-08T03:50:13Z",
-  "geom": {
-    "type": "Point",
-    "coordinates": [
-      121.057036720306,
-      14.5857353
-    ]
-  },
-  "location_text": "SM Megamall Building A, SM Megamall, Wack-Wack Greenhills, Mandaluyong, 2nd District, NCR;MM, 1554, Luzon",
-  "weather": "scattered clouds",
-  "light": "",
-  "city": null,
-  "city_district": null,
-  "county": null,
-  "neighborhood": null,
-  "road": null,
-  "state": null,
-  "merged_and_updated": false,
-  "merged_uuid": null,
-  "uploaded_from": "Web",
-  "schema": "f825db2c-d182-4edc-8778-1b19452ed3b7"
-}
+}}`. The query above defines the following two filters:
 
-**URL**
+        * accidentDetails -> "Main cause" == "Vehicle defect" OR accidentDetails -> "Main cause" == "Road defect"
 
-http://{{ip}}:{{port}}/api/record-copy-details/1b043f48-a08f-44ca-a600-c21c269fbfcc/
+        * accidentDetails -> "Num driver casualties" >= 1 AND accidentDetails -> "Num driver casualties" <= 3
 
-**METHOD**
+    * There is a third filter rule type available: "containment_multiple". This is used when searching a field of which there can be several on a single record. For example, "People" or "Vehicles". Here's an example:
+`{"person":{"Injury":{"_rule_type":"containment_multiple","contains":["Fatal"]}}}`
 
-  GET
+* `occurred_min`: Timestamp
 
-**RESPONSE**
+    * Filter to Records occurring after this date
 
-**URL**
+* `occurred_max`: Timestamp
 
-http://{{ip}}:{{port}}/api/duplicates/?occurred_min=2021-04-10T18:30:00.000Z&occurred_max=2021-07-10T08:29:24.419Z&resolved=False&limit=50&offset=0&search=&polygon_id=
+    * Filter to Records occurring before this date
 
-**METHOD**
+* `polygon_id`: UUID
 
-  GET
+    * Filter to Records which occurred within the Polygon identified by the UUID
+
+* `polygon`: GeoJSON
+
+    * Filter to Records which occurred within the bounds of the GeoJSON
+
+* `tilekey`: Boolean, List endpoint **only**
+
+    * Instruct the API that you will want to generate tiles from this set of filtered events later. Subsequent requests to the `/tiles/` endpoint using this tilekey will return tiles of events filtered to these query parameters. The tile server is [Windshaft](https://github.com/CartoDB/Windshaft); documenting its API is beyond the scope of this document, but it is an XYZ tile server that should be fairly straightforward to integrate with a mapping library such as Leaflet or OpenLayers.
+
+List / Detail Results fields
+
+* `uuid`: UUID
+
+    * Unique ID of this Record
+
+* `created`: Timestamp
+
+    * The date this Record was created
+
+* `modified`: Timestamp
+
+    * The date this Record was most recently updated
+
+* `occurred_from`: Timestamp
+
+    * The earliest time at which this Record might have occurred
+
+* `occurred_to`: Timestamp
+
+    * The latest time at which this Record might have occurred
+
+    * All DRIVER Records use identical occurred_from and occurred_to timestamps
+
+* `geom`: GeoJSON
+
+    * Geometry representing point where this Record occurred
+
+* `location_text`: String
+
+    * A description of the location where this Record occurred; this is usually an address.
+
+* `city`: String
+
+* `city_district`: String
+
+* `county`: String
+
+* `neighborhood`: String
+
+* `road`: String
+
+* `state`: String
+
+* `weather`: String
+
+    * Description of the weather conditions when the Record occurred
+
+* `light`: String
+
+    * Description of the lighting conditions when the Record occurred
+
+* `archived`: Boolean
+
+    * A way of hiding records without deleting them completely. True indicates archived.
+
+* `schema`: UUID
+
+    * References the Schema which was used to create this Record.
+
+* `data`: Object
+
+    * A JSON object representing the data associated with this Record. It is always true that the object stored in "data" conforms to the RecordSchema referenced by the "schema" UUID.
+
+## Boundaries
+
+Paths
+
+* List: `/api/boundaries/`
+
+* Detail: `/api/boundaries/{uuid}/`
+
+Results fields:
+
+* `uuid`: UUID
+
+* `label`: String
+
+    * Label of this Boundary, for display
+
+* `color`: String
+
+    * Rendering color preference for this Boundary
+
+* `display_field`: String
+
+    * Which field of the imported Shapefile to use for display
+
+* `data_fields`: Array
+
+    * List of the names of the fields contained in the imported Shapefile
+
+* `errors`: Array
+
+    * A possible list of errors importing the Shapefile.
+
+* `created`: Timestamp
+
+* `modified`: Timestamp
+
+* `status`: String
+
+    * Import status of Shapefile
+
+* `source_file`: String
+
+    * URI to the Shapefile that was originally used to generate this Boundary.
+
+**Notes**
+
+Creating a new Boundary and its Polygons correctly is a two-step process.
+
+1. POST to `/api/boundaries/` with a zipped Shapefile attached; you will need to include the label as form-data. You will (hopefully) receive a 201 response which contains a fully-fledged Boundary object, including a list of available data fields in `data_fields`.
+
+2. The response from the previous request will have a blank `display_field`. Select one of the fields in `data_fields` and make a PATCH request to `/api/boundaries/{uuid}/` with that value in `display_field`. You are now ready to use this Boundary and its associated Boundary Polygons.
+
+## Boundary Polygons
+
+Paths
+
+* List: `/api/boundarypolygons/`
+
+* Detail: `/api/boundarypolygons/{uuid}/`
+
+Results fields:
+
+* `uuid`: UUID
+
+* `data`: Object
+
+    * Each key in this Object will correspond to one of the data_fields in the parent Boundary, and will store the value for that field for this Polygon
+
+* `created`: Timestamp
+
+* `modified`: Timestamp
+
+* `boundary`: UUID
+
+    * ID of the parent Boundary for this Polygon.
+
+* `bbox`: Array
+
+    * Minimum bounding box containing this Polygon's geometry, as an Array of lat/lon points
+
+    * Optional (see nogeom parameter, below)
+
+* `geometry`: GeoJSON
+
+    * GeoJSON representation of this Polygon
+
+    * Optional (see nogeom parameter, below)
+
+Query Parameters:
+
+* `boundary`: UUID
+
+    * Filter to Polygons associated with this parent Boundary
+
+* `nogeom`
+
+    * When passed with any value, causes the geometry field to be replaced with a bbox field. This reduces the response size and is sufficient for many purposes.
+
+## Black Spot Sets
+
+Paths
+
+* List: `/api/blackspotsets/`
+
+* Detail: `/api/blackspotsets/{uuid}/`
+
+Results fields
+
+* `uuid`: UUID
+
+* `created`: Timestamp
+
+* `modified`: Timestamp
+
+* `effective_start`: Timestamp
+
+    * Black Spot Sets are predictive and are generated automatically by DRIVER once configured. A Black Spot Set is effective from the time it is generated until it is superseded by a newer Black Spot Set. The effective_start and effective_end (below) fields determine whether a Black Spot Set is effective at a particular date / time.
+
+* `effective_end`: Timestamp
+
+    * Counterpart to effective_start (above). Null if this Black Spot Set is the newest available.
+
+* `record_type`: UUID
+
+    * The Record Type which this Black Spot Set predicts.
+
+Query Parameters
+
+* `effective_at`: Timestamp
+
+    * Only return Black Spot Sets which are effective at the given time.
+
+* `record_type`: UUID
+
+**Notes**
+
+## Black Spots
+
+Paths
+
+* List: `/api/blackspots/`
+
+* Detail: `/api/blackspots/{uuid}/`
+
+Results fields
+
+* `uuid`: UUID
+
+* `created`: Timestamp
+
+* `modified`: Timestamp
+
+* `severity_score`: Float
+
+    * How severe this Black Spot is predicted to be.
+
+* `num_records`: Int
+
+    * The number of Records which contributed to this Black Spot's designation
+
+* `num_severe`: Int
+
+    * The number of severe Records which contributed to this Black Spot's designation
+
+* `black_spot_set`: UUID
+
+* `geom`: GeoJSON
+
+    * The area which this Black Spot encompasses
+
+Query Parameters
+
+* `black_spot_set`: UUID
+
+    * Only return Black Spots associated with this Black Spot Set.
   
-**RESPONSE**
+## Registration
 
-**URL**
+* List: `/auth-api/adv-registration/`
 
-http://{{ip}}:{{port}}/api/duplicate-record-list/d6097440-3a9d-4af4-a7d4-d50887e04d71/
+Query Parameters
 
-**METHOD**
+* `groups`: Int
 
-  GET
-
-**RESPONSE**
-
-
-**URL**
-
-http://{{ip}}:{{port}}/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=barchart
-
-**METHOD**
-
-  GET
+* `limit`: Int
   
-**RESPONSE**
+* `offset`: Int
 
-{
-  "x-axis": [
-    "Pedestrian on foot",
-    "Vehicle from adjacent direction (intersection only)",
-    "Vehicle from opposing direction",
-    "Vehicle from same direction",
-    "Maneuvering",
-    "Overtaking",
-    "On path",
-    "Off path straight",
-    "Off path curve",
-    "Passenger and miscellaneous"
-  ],
-  "y-axis": [
-    "Fatal",
-    "Injury",
-    "Property Damage"
-  ],
-  "data": [
-    [
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0
-    ],
-    [
-      2,
-      0,
-      0,
-      1,
-      1,
-      0,
-      1,
-      0,
-      0,
-      0
-    ],
-    [
-      3,
-      1,
-      1,
-      0,
-      2,
-      0,
-      0,
-      0,
-      0,
-      0
-    ]
-  ]
-}
+* `user`: Str
 
-**URL**
 
-http://{{ip}}:{{port}}/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&row_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Crash+Type&rowLabel=Severity&data_for=piechart
+* To create new user account make a POST request to `/api/registration/` with below data params
 
-**METHOD**
-
-  GET
+* `username`: Str
   
-**RESPONSE**
-
-{
-  "x-axis": [
-    "Pedestrian on foot",
-    "Vehicle from adjacent direction (intersection only)",
-    "Vehicle from opposing direction",
-    "Vehicle from same direction",
-    "Maneuvering",
-    "Overtaking",
-    "On path",
-    "Off path straight",
-    "Off path curve",
-    "Passenger and miscellaneous"
-  ],
-  "data": [
-    6,
-    1,
-    1,
-    2,
-    3,
-    0,
-    1,
-    0,
-    1,
-    0
-  ]
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/records/crosstabs/?calendar=gregorian&archived=False&occurred_max=2021-07-10T14%3A39%3A03.000Z&occurred_min=2021-06-01T00%3A30%3A00.000Z&col_choices_path=driverIncidentDetails%2Cproperties%2CSeverity%2Citems&row_choices_path=driverCrashDiagram%2Cproperties%2CCrash+Type&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&colLabel=Severity&rowLabel=Crash+Type
-
-**METHOD**
-
-  GET
+* `password`: Str
   
-**RESPONSE**
-
-{
-  "tables": [
-    {
-      "data": {
-        "Pedestrian on foot": {
-          "Fatal": 1,
-          "Property Damage": 3,
-          "Injury": 2
-        },
-        "Maneuvering": {
-          "Property Damage": 2,
-          "Injury": 1
-        },
-        "Vehicle from same direction": {
-          "Fatal": 1,
-          "Injury": 1
-        },
-        "Vehicle from opposing direction": {
-          "Property Damage": 1
-        },
-        "Vehicle from adjacent direction (intersection only)": {
-          "Property Damage": 1
-        },
-        "Off path curve": {
-          "Fatal": 1
-        },
-        "On path": {
-          "Injury": 1
-        }
-      },
-      "row_totals": {
-        "Pedestrian on foot": 6,
-        "Maneuvering": 3,
-        "Vehicle from same direction": 2,
-        "Vehicle from opposing direction": 1,
-        "Vehicle from adjacent direction (intersection only)": 1,
-        "Off path curve": 1,
-        "On path": 1
-      }
-    }
-  ],
-  "table_labels": {},
-  "row_labels": [
-    {
-      "key": "Pedestrian on foot",
-      "label": [
-        {
-          "text": "Pedestrian on foot",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Vehicle from adjacent direction (intersection only)",
-      "label": [
-        {
-          "text": "Vehicle from adjacent direction (intersection only)",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Vehicle from opposing direction",
-      "label": [
-        {
-          "text": "Vehicle from opposing direction",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Vehicle from same direction",
-      "label": [
-        {
-          "text": "Vehicle from same direction",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Maneuvering",
-      "label": [
-        {
-          "text": "Maneuvering",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Overtaking",
-      "label": [
-        {
-          "text": "Overtaking",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "On path",
-      "label": [
-        {
-          "text": "On path",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Off path straight",
-      "label": [
-        {
-          "text": "Off path straight",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Off path curve",
-      "label": [
-        {
-          "text": "Off path curve",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Passenger and miscellaneous",
-      "label": [
-        {
-          "text": "Passenger and miscellaneous",
-          "translate": false
-        }
-      ]
-    }
-  ],
-  "col_labels": [
-    {
-      "key": "Fatal",
-      "label": [
-        {
-          "text": "Fatal",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Injury",
-      "label": [
-        {
-          "text": "Injury",
-          "translate": false
-        }
-      ]
-    },
-    {
-      "key": "Property Damage",
-      "label": [
-        {
-          "text": "Property Damage",
-          "translate": false
-        }
-      ]
-    }
-  ]
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/csv-export/
-
-**METHOD**
-
-  POST
+* `first_name`: Str
   
-**DATA PARAMS**
-
-{"tilekey":"0xxxxx-xxxxxx-xxxxx-xxxxx-xxxxxxxx6","group_id":x}
-
-**RESPONSE**
-
-{
-  "success": true,
-  "taskid": "7xxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxxxx7"
-}
-
-**URL**
-
-http://{{ip}}:{{port}}/api/csv-export/7xxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxxxx7/
-
-**METHOD**
-
-  GET
+* `last_name`: Str
   
-**RESPONSE**
+* `email`: Str
+  
+* `groups`: List
+  
+* `is_staff`: Boolean
 
-{"status":"SUCCESS","result":"http://localhost/download/Incidents-0f783106.zip"}
+* Results fields
+
+* `groupdetail`: List
+  
+* `token`: Int
+  
+* `id`: Int
+  
+* `first_name`: Str
+  
+* `last_name`: Str
+  
+* `username`: Str
+  
+* `groups`: List
+  
+* `email`: Email
+  
+* `date_joined`: DateTime
+  
+* `is_staff`: Boolean
+  
+* `is_superuser`: Boolean
 
 
-**URL**
+* To storing additional user details make a POST request to `/auth-api/adv-registration/` after success response of 
+  `/api/registration/` API and pass id returned by `/api/registration/` API as a `user` data param to 
+  `/auth-api/adv-registration/`
 
-http://{{ip}}:{{port}}/api/getrecords/?archived=False&jsonb={%22driverIncidentDetails%22:{%22Severity%22:{%22_rule_type%22:%22containment%22,%22contains%22:[]}}}&polygon={%22type%22:%22Polygon%22,%22coordinates%22:[[[121.35498046875001,16.088042220148818],[121.35498046875001,17.14079039331665],[122.29980468750001,17.14079039331665],[122.29980468750001,16.088042220148818],[121.35498046875001,16.088042220148818]]]}&limit=50&occurred_max=2021-07-10T08:39:03.000Z&occurred_min=2021-05-31T18:30:00.000Z&record_type=fe31e012-0d9b-4694-a86d-8c737e0c7672&tilekey=falsenull&flag=0
+`username`: Str
 
-**METHOD**
+`password`: Str
 
-  GET
+`first_name`: Str
 
-**RESPONSE**
+`last_name`: Str
+
+`email`: Str
+
+`groups`: List
+
+`geography`: UUID
+
+`is_staff`: Boolean
+
+`user`: Int
+
+
+Results Fields
+
+* `id`: Int
+  
+* `first_name`: Str
+  
+* `last_name`: Str
+  
+* `email`: Str
+  
+* `username`: Str
+  
+* `geography`: Str
+  
+* `reg`: List
+  
+* `city`: List
+  
+* `org`: List
+  
+* `groups`: List
+  
+* `is_active`: Boolean
+  
+* `date_joined`: DateTime
+  
+* `updated_on`: DateTime
+  
+* `user`: Int
+  
+* `is_role_requested`: Str
+  
+* `mobile_no`: null
+  
+* `is_staff`: Boolean
+  
+* `is_superuser`: Boolean
+  
+* `is_analyst`: Boolean
+  
+* `is_tech_analyst`: Boolean
+  
+* `google_user`: Boolean
+
+
+* To get the user details make a GET request to `/auth-api/user-info/2/` 
+
+Results Fields
+
+`groupdetail`: List
+
+`token`: UUID
+
+`id`: Id
+
+`first_name`: Str
+
+`last_name`: Str
+
+`username`: Str
+
+`email`: Email
+
+`groups`: List
+
+`is_staff`: Boolean
+
+`is_superuser`: Boolean
+
+`is_active`: Boolean
+
+`date_joined`: DateTime
+
+
+* To get permissions of a user make a POST request to `/api/get-group-permissions/` with List of codenames and user id
+
+`codename`: List,
+`user`: Int
+
+Results Fields
+
+* `codename`: Str,
+* `status`: Boolean
+
+
+* To add a country make a POST request to `/api/country-info/` with the following data parameters
+
+`country_code`: Str
+
+`country_name`: Str
+
+`latitude`: Float
+
+`longitude`: Float
+
+* To get list of countries make a GET request to `/api/country-info/`
+
+Query parameters
+
+* `archived` : Boolean
+
+* Result Fields
+
+* `id`: Int
+
+* `country_code`: Str
+
+* `country_name`: Str
+
+* `archived`: Boolean
+
+* `latitude`: Float
+
+* `longitude`: Float
+
+
+* To add language make a POST request to `/api/language-details/` with the following data parameters
+
+`label`: Str
+
+`upload_for`: Str
+
+`language_code`: Str
+
+`csv_f`: application/vnd.ms-excel;base64
+
+`default_for_user_panel`: Boolean
+
+`default_for_admin_panel`: Boolean
+
+`archive`: Boolean
+
+
+* To get list of languages make a GET request to `/api/language-details/` which will return al of the languages
+
+Query params
+
+* `archive` : Boolean
+
+* Results fields
+
+* `id`: Int
+
+* `label`: Str
+
+* `csv_file`: Str
+
+* `json_file`: Str
+
+* `language_code`: Str
+
+* `upload_for`: Str
+
+* `default_for_user_panel`: Boolean
+
+* `default_for_admin_panel`: Boolean
+
+* `archive`: Boolean
+
+* `created_date`: DateTime
+
+* `updated_date`: DateTime
+
+
+* To get details of a perticular language make GET request to `/api/language-details/{{IDD}}/` pass id as a query params
+
+* Result fields
+
+`id`: Int
+
+`label`: Str
+
+`csv_file`: Str
+
+`json_file`: Str
+
+`language_code`: Str
+
+`upload_for`: Str
+
+`default_for_user_panel`: Boolean
+
+`default_for_admin_panel`: Boolean
+
+`archive`: Boolean
+
+`created_date`: DateTime
+
+`updated_date`: DateTime
+
+
+* To update details of a language object make a PUT request to `/api/language-details/{{ID}}/` pass id of the object you
+  want to update
+  
+
+* To get translated text make a GET request to `/api/lang-json/{{lang_code}}/{{upload_for}}/`
+
+* Query params
+
+`lang_code` : i.e. en,ph etc
+`upload_for` : admin_panel or user_panel
+
+* Result fields
+
+Returns translated text as a key value pair
+
+* To add group make a POST request to `/api/auth-group/` with following data parameters
+
+`name`: Str
+
+`description`: Str
+
+`permissions`: List
+
+
+Results Fields
+
+`id`: Int
+
+`name`: Str
+
+`permissions`: List
+
+After above API success response make post request to `/auth-api/driver-group/` pass value of the id of above API's 
+response to group
+
+`group` : 6,
+
+`name`: Admin,
+
+`description` : Group Description
+
+Results Fields
+
+* `id`: Int
+  
+* `name`: Str
+  
+* `group`: Int
+  
+* `description`: Str
+  
+* `is_admin`: Boolean
+
+
+To add weathe API providers info make a POST request to `/auth-api/weather-info/` with following data params
+
+
+`provider_name`: Str
+
+`client_id`: Int
+
+`client_secret`: Int
+
+`is_active`: Boolean
+
+
+* To get weather API providers details make a GET request to `/auth-api/weather-info/`
+
+Results Fields
+
+`id`: Int
+
+`provider_name`: Str
+
+`client_id`: Int
+
+`client_secret`: Int
+
+`is_active`: Boolean
+
+`created_at`: DateTime
+
+`is_deleted`: Boolean
+
+
+* To delete weather API providers details make a DELETE request to `/auth-api/weather-info-details/{id}/`
+
+
+
+* To add the choices for list of weathers make a POST request to with list of ids `/api/weather-data-list/`
+
+`ids`: [2, 3,...]
+
+To get list of values for weather make a GET request to `/api/weather-data-list/`
+
+Results Fields
+
+`id`: Int
+
+`label`: Str
+
+`value`: Str
+
+`active`:  Boolean
+
+
+* To get the details of crash type make GET request to `/data-api/bindcrashtype/{uuid_of_recordtype}/`
+
+
+To get the details of a groups make a GET request to `/api/auth-group/` it will return all of the groups with their 
+permissions
+
+* Results Fields
+
+
+* `id`: Int
+
+* `name`: Str
+
+* `permissions` : List
+
+
+*To get detailed list of files added for bulk upload make a GET request to `/api/bulk-upload-details/`
+
+* Result fields
 
 [
   {
-    "Crash number": 1,
-    "Date: day-month": "04-06",
-    "Date: year": 2021,
-    "Day of week": "Friday",
-    "Time of day": "16:13",
-    "Severity": [
-      "Fatal",
-      "Injury"
-    ],
-    "light": "",
-    "DCA code": ""
-  }
+    id: Int,
+    file_name: Str,
+    file_status: Str,
+    csv_uploaded_date: DateTime,
+    record_type: Str
+  },........
 ]
+
+* To upload records in bulk make a POST request to `/api/bulkupload/` with the following data parameters
+
+
+`jsondata`: data:text/csv;base64,(Base 64 of a file that contains records in bulk)
+`upload_for`: Str(Incident, Intervention)
+`record_type`: UUID
+
+
+* To get the details of duplicate record make GET request to `/api/duplicate-record-list/{{UUID}}/`
+ 
+
+* For getting the details of crash factor matrix make GET request to `/api/getrecords/`
+
+* Query params
+
+* `archived` : Boolean
+
+* `jsonb` : Object
+
+* Query the data fields of the object and filter on the result.
+
+    * Keys in this object mimic the search paths to filter on a particular object field. However, in place of values, a filter rule definition is used. Example:
+`{ "accidentDetails": {
+    "Main+cause": {
+        "_rule_type": "containment",
+        "contains": [
+            "Vehicle+defect",
+            "Road+defect",
+            ["Vehicle+defect"],
+            ["Road+defect"]
+        ]
+    },
+    "Num+driver+casualties": {
+        "_rule_type": "intrange",
+        "min": 1,
+        "max": 3
+    }
+}}` 
+      
+`polygon`=UUID
+      
+`limit`=Int
+
+`occurred_max`=DateTime
+
+`occurred_min`=DateTime
+
+`record_type`=UUID
+
+`tilekey`=Boolean
+
+* Results fields
+
+`Crash number`: Int
+
+`Date`: day-month: 04-06
+
+`Date`: year: 2021
+
+`Day of week`: Str
+
+`Time of day`: 16:13
+
+`Severity`: List
+
+`light`: Str
+
+`DCA code`: Int
