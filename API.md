@@ -14,6 +14,15 @@ DRIVER is a flexible app for storing crash data and related information. DRIVER 
 - [**Black Spot Sets**](#black-spot-sets)
 - [**Black Spots**](#black-spots)
 - [**Registration**](#registration)
+- [**My Account**](#my-account)
+- [**User Permissions**](#user-permissions) 
+- [**Country Details**](#country-details)
+- [**Language Details**](#language-details)
+- [**Group Details**](#group-details)
+- [**Weather Info**](#weather-info)
+- [**Crash Type**](#crash-type)
+- [**Bulk Upload**](#bulk-upload)
+- [**Crash Factor Matrix**](#crash-factor-matrix)
 
 ## Resource Types
 
@@ -724,23 +733,23 @@ Query Parameters
   `/api/registration/` API and pass id returned by `/api/registration/` API as a `user` data param to 
   `/auth-api/adv-registration/`
 
-`username`: Str
+* `username`: Str
 
-`password`: Str
+* `password`: Str
 
-`first_name`: Str
+* `first_name`: Str
 
-`last_name`: Str
+* `last_name`: Str
 
-`email`: Str
+* `email`: Str
 
-`groups`: List
+* `groups`: List
 
-`geography`: UUID
+* `geography`: UUID
 
-`is_staff`: Boolean
+* `is_staff`: Boolean
 
-`user`: Int
+* `user`: Int
 
 
 Results Fields
@@ -787,56 +796,58 @@ Results Fields
   
 * `google_user`: Boolean
 
-
+## My Account
 * To get the user details make a GET request to `/auth-api/user-info/2/` 
 
 Results Fields
 
-`groupdetail`: List
+* `groupdetail`: List
 
-`token`: UUID
+* `token`: UUID
 
-`id`: Id
+* `id`: Id
 
-`first_name`: Str
+* `first_name`: Str
 
-`last_name`: Str
+* `last_name`: Str
 
-`username`: Str
+* `username`: Str
 
-`email`: Email
+* `email`: Email
 
-`groups`: List
+* `groups`: List
 
-`is_staff`: Boolean
+* `is_staff`: Boolean
 
-`is_superuser`: Boolean
+* `is_superuser`: Boolean
 
-`is_active`: Boolean
+* `is_active`: Boolean
 
-`date_joined`: DateTime
+* `date_joined`: DateTime
 
+## User Permissions
 
 * To get permissions of a user make a POST request to `/api/get-group-permissions/` with List of codenames and user id
 
-`codename`: List,
-`user`: Int
+* `codename`: List,
+* `user`: Int
 
 Results Fields
 
 * `codename`: Str,
 * `status`: Boolean
 
+## Country Details
 
 * To add a country make a POST request to `/api/country-info/` with the following data parameters
 
-`country_code`: Str
+* `country_code`: Str
 
-`country_name`: Str
+* `country_name`: Str
 
-`latitude`: Float
+* `latitude`: Float
 
-`longitude`: Float
+* `longitude`: Float
 
 * To get list of countries make a GET request to `/api/country-info/`
 
@@ -858,22 +869,23 @@ Query parameters
 
 * `longitude`: Float
 
+## Language Details
 
 * To add language make a POST request to `/api/language-details/` with the following data parameters
 
-`label`: Str
+* `label`: Str
 
-`upload_for`: Str
+* `upload_for`: Str
 
-`language_code`: Str
+* `language_code`: Str
 
-`csv_f`: application/vnd.ms-excel;base64
+* `csv_f`: application/vnd.ms-excel;base64
 
-`default_for_user_panel`: Boolean
+* `default_for_user_panel`: Boolean
 
-`default_for_admin_panel`: Boolean
+* `default_for_admin_panel`: Boolean
 
-`archive`: Boolean
+* `archive`: Boolean
 
 
 * To get list of languages make a GET request to `/api/language-details/` which will return al of the languages
@@ -911,27 +923,27 @@ Query params
 
 * Result fields
 
-`id`: Int
+* `id`: Int
 
-`label`: Str
+* `label`: Str
 
-`csv_file`: Str
+* `csv_file`: Str
 
-`json_file`: Str
+* `json_file`: Str
 
-`language_code`: Str
+* `language_code`: Str
 
-`upload_for`: Str
+* `upload_for`: Str
 
-`default_for_user_panel`: Boolean
+* `default_for_user_panel`: Boolean
 
-`default_for_admin_panel`: Boolean
+* `default_for_admin_panel`: Boolean
 
-`archive`: Boolean
+* `archive`: Boolean
 
-`created_date`: DateTime
+* `created_date`: DateTime
 
-`updated_date`: DateTime
+* `updated_date`: DateTime
 
 
 * To update details of a language object make a PUT request to `/api/language-details/{{ID}}/` pass id of the object you
@@ -940,40 +952,39 @@ Query params
 
 * To get translated text make a GET request to `/api/lang-json/{{lang_code}}/{{upload_for}}/`
 
-* Query params
-
-`lang_code` : i.e. en,ph etc
-`upload_for` : admin_panel or user_panel
+* `lang_code` : i.e. en,ph etc
+* `upload_for` : admin_panel or user_panel
 
 * Result fields
 
 Returns translated text as a key value pair
 
+## Group Details
 * To add group make a POST request to `/api/auth-group/` with following data parameters
 
-`name`: Str
+* `name`: Str
 
-`description`: Str
+* `description`: Str
 
-`permissions`: List
+* `permissions`: List
 
 
 Results Fields
 
-`id`: Int
+* `id`: Int
 
-`name`: Str
+* `name`: Str
 
-`permissions`: List
+* `permissions`: List
 
 After above API success response make post request to `/auth-api/driver-group/` pass value of the id of above API's 
 response to group
 
-`group` : 6,
+* `group` : Int,
 
-`name`: Admin,
+* `name`: Str,
 
-`description` : Group Description
+* `description` : Str
 
 Results Fields
 
@@ -987,36 +998,37 @@ Results Fields
   
 * `is_admin`: Boolean
 
+## Weather Info
 
 To add weathe API providers info make a POST request to `/auth-api/weather-info/` with following data params
 
 
-`provider_name`: Str
+* `provider_name`: Str
 
-`client_id`: Int
+* `client_id`: Int
 
-`client_secret`: Int
+* `client_secret`: Int
 
-`is_active`: Boolean
+* `is_active`: Boolean
 
 
 * To get weather API providers details make a GET request to `/auth-api/weather-info/`
 
 Results Fields
 
-`id`: Int
+* `id`: Int
 
-`provider_name`: Str
+* `provider_name`: Str
 
-`client_id`: Int
+* `client_id`: Int
 
-`client_secret`: Int
+* `client_secret`: Int
 
-`is_active`: Boolean
+* `is_active`: Boolean
 
-`created_at`: DateTime
+* `created_at`: DateTime
 
-`is_deleted`: Boolean
+* `is_deleted`: Boolean
 
 
 * To delete weather API providers details make a DELETE request to `/auth-api/weather-info-details/{id}/`
@@ -1031,14 +1043,15 @@ To get list of values for weather make a GET request to `/api/weather-data-list/
 
 Results Fields
 
-`id`: Int
+* `id`: Int
 
-`label`: Str
+* `label`: Str
 
-`value`: Str
+* `value`: Str
 
-`active`:  Boolean
+* `active`:  Boolean
 
+## Crash Type
 
 * To get the details of crash type make GET request to `/data-api/bindcrashtype/{uuid_of_recordtype}/`
 
@@ -1055,8 +1068,9 @@ permissions
 
 * `permissions` : List
 
+## Bulk Upload
 
-*To get detailed list of files added for bulk upload make a GET request to `/api/bulk-upload-details/`
+* To get detailed list of files added for bulk upload make a GET request to `/api/bulk-upload-details/`
 
 * Result fields
 
@@ -1073,13 +1087,14 @@ permissions
 * To upload records in bulk make a POST request to `/api/bulkupload/` with the following data parameters
 
 
-`jsondata`: data:text/csv;base64,(Base 64 of a file that contains records in bulk)
-`upload_for`: Str(Incident, Intervention)
-`record_type`: UUID
+* `jsondata`: data:text/csv;base64,(Base 64 of a file that contains records in bulk)
+* `upload_for`: Str(Incident, Intervention)
+* `record_type`: UUID
 
 
 * To get the details of duplicate record make GET request to `/api/duplicate-record-list/{{UUID}}/`
  
+## Crash Factor Matrix
 
 * For getting the details of crash factor matrix make GET request to `/api/getrecords/`
 
@@ -1109,32 +1124,32 @@ permissions
     }
 }}` 
       
-`polygon`=UUID
+* `polygon`=UUID
       
-`limit`=Int
+* `limit`=Int
 
-`occurred_max`=DateTime
+* `occurred_max`=DateTime
 
-`occurred_min`=DateTime
+* `occurred_min`=DateTime
 
-`record_type`=UUID
+* `record_type`=UUID
 
-`tilekey`=Boolean
+* `tilekey`=Boolean
 
 * Results fields
 
-`Crash number`: Int
+* `Crash number`: Int
 
-`Date`: day-month: 04-06
+* `Date`: day-month: 04-06
 
-`Date`: year: 2021
+* `Date`: year: 2021
 
-`Day of week`: Str
+* `Day of week`: Str
 
-`Time of day`: 16:13
+* `Time of day`: 16:13
 
-`Severity`: List
+* `Severity`: List
 
-`light`: Str
+* `light`: Str
 
-`DCA code`: Int
+* `DCA code`: Int
