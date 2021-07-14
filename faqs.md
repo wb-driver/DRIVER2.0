@@ -51,7 +51,8 @@ HTML5 (consumed in any modern web browser), a native Android and iOS app.
 The basemaps are using Carto. You should see requests to map tiles similar to `https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/5/12/16.png` in your network tab.
 
 ### Does DRIVER2.0 have links to or interfaces with other systems?
-DRIVER2.0 gathers crash records from its companion Android/iOS applications, which runs on users' Android/iOS smartphones. It also interfaces with OpenWeatherMap, which is an API that provides weather information for the crash records. It pulls street information from Open Street Map extracts from GeoFabrik. Pickpoint.io is used for geocoding and reverse geocoding. DRIVER2.0 grabs street-level images from Mapillary to display to the user. DRIVER2.0 uses a basemap tile service from Carto.
+DRIVER2.0 gathers crash records from its companion Android/iOS applications, which runs on users' Android/iOS smartphones. It also interfaces with OpenWeatherMap and iRAP.  OpenWeatherMap is an API that provides weather information for the crash records. It pulls street information from Open Street Map extracts from GeoFabrik. Pickpoint.io is used for geocoding and reverse geocoding. DRIVER2.0 grabs street-level images from Mapillary to display to the user. DRIVER2.0 uses a basemap tile service from Carto.
+The iRAP API provides the star rating, road features and the iRAP toolkit. This information is generally used to pull the street information for the specific datasets assigned to the particular user.
 
 ### Does DRIVER2.0 have News Feeds or Widgets (e.g. RSS, Twitter, Atom, etc.)?
 No, there isn't any news feed integration.
