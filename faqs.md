@@ -1,6 +1,6 @@
 # Frequently asked questions
 
-The goal of this document is to provide concise answers to commonly asked questions pertaining to setting up, deploying, and maintaining DRIVER. Many of these topics are covered more in-depth in other sections of the documentation, so please read through the complete set of documentation in order to gain a better understanding of the system.
+The goal of this document is to provide concise answers to commonly asked questions pertaining to setting up, deploying, and maintaining DRIVER2.0. Many of these topics are covered more in-depth in other sections of the documentation, so please read through the complete set of documentation in order to gain a better understanding of the system.
 
 
 ## Sections
@@ -15,7 +15,7 @@ The goal of this document is to provide concise answers to commonly asked questi
 Your version of cURL may not have the right certificate authorities installed. Try passing the `-k` parameter to `curl`.
 
 ### How can I make a field searchable?
-You can change the field in the schema editor by going to https://[DRIVER domain]/editor/. Drop down "Incident" on the left side and go to "View Related Content". Then, click the "Edit" button on the group the field belongs to. In there each field has a checkbox for `Filterable/Searchable` that if checked it will become filterable (if a drop-down field) or searchable (if a text field).
+You can change the field in the schema editor by going to https://[DRIVER2.0 domain]/editor/. Drop down "Incident" on the left side and go to "View Related Content". Then, click the "Edit" button on the group the field belongs to. In there each field has a checkbox for `Filterable/Searchable` that if checked it will become filterable (if a drop-down field) or searchable (if a text field).
 
 ### Why do I see an error fetching gpg key from keyserver while provisioning?
 This comes up occasionally and is generally seend as transient issue, i.e., after running the command again, the issue would not show itself.
@@ -41,26 +41,26 @@ The example CloudFormation template doesn't make use of a bastion machine: there
 ### What is the operating system on which the database server is hosted?
 The operating system on all the machines is Ubuntu 18.04 (Linux).
 
-### What database is used within DRIVER?
-DRIVER uses PostgreSQL with the PostGIS extension.
+### What database is used within DRIVER2.0?
+DRIVER2.0 uses PostgreSQL with the PostGIS extension.
 
 ### What is the main language/framework used to build this system?
-DRIVER uses JavaScript, Python, HTML, CSS, and a small amount of Java and R. The front-end UI of the app uses the Angular v8.1.x framework and the back-end uses the Django web framework.
+DRIVER2.0 uses JavaScript, Python, HTML, CSS, and a small amount of Java and R. The front-end UI of the app uses the Angular v8.1.x framework and the back-end uses the Django web framework.
 
-### What is the client-side technology used by DRIVER?
+### What is the client-side technology used by DRIVER2.0?
 HTML5 (consumed in any modern web browser) and a native Android, iOS app.
 
-### What set of basemaps does DRIVER use?
+### What set of basemaps does DRIVER2.0 use?
 The basemaps are using Carto. You should see requests to map tiles similar to `https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/5/12/16.png` in your network tab.
 
-### Does DRIVER have links to or interfaces with other systems?
-DRIVER gathers crash records from its companion Android application, which runs on users' Android smartphones. It also interfaces with OpenWeatherMap, which is an API that provides weather information for the crash records. It pull street information from Open Street Map extracts from GeoFabrik. Pickpoint.io is used for geocoding and reverse geocoding. DRIVER grabs street-level images from Mapillary to display to the user. DRIVER uses a basemap tile service from Carto.
+### Does DRIVER2.0 have links to or interfaces with other systems?
+DRIVER2.0 gathers crash records from its companion Android application, which runs on users' Android smartphones. It also interfaces with OpenWeatherMap, which is an API that provides weather information for the crash records. It pull street information from Open Street Map extracts from GeoFabrik. Pickpoint.io is used for geocoding and reverse geocoding. DRIVER2.0 grabs street-level images from Mapillary to display to the user. DRIVER2.0 uses a basemap tile service from Carto.
 
-### Does DRIVER have News Feeds or Widgets (e.g. RSS, Twitter, Atom, etc.)?
+### Does DRIVER2.0 have News Feeds or Widgets (e.g. RSS, Twitter, Atom, etc.)?
 No, there isn't any news feed integration.
 
-### Does DRIVER have any type of authentication or access control mechanisms that will be present when the site is live and in production?
+### Does DRIVER2.0 have any type of authentication or access control mechanisms that will be present when the site is live and in production?
 The site requires authentication to use. It offers two methods of authentication. One is username/password authentication. The second is Single Sign On that can be accessed if the user has a Google account. The SSO is achieved via the OAuth protocol. The site does not utilize 2FA/MFA. Once authentication has been achieved, the user receives a token that is used to authenticate each request to the site's API.
 
 ### What APIs does the Android app require access to?
-The DRIVER Android app needs access to the camera API.
+The DRIVER2.0 Android, iOS app needs access to the camera API.
