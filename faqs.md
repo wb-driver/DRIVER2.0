@@ -45,16 +45,16 @@ The operating system on all the machines is Ubuntu 18.04 (Linux).
 DRIVER uses PostgreSQL with the PostGIS extension.
 
 ### What is the main language/framework used to build this system?
-DRIVER uses JavaScript, Python, HTML, CSS, and a small amount of Java and R. The front-end UI of the app uses the AngularJS v1.5 framework and the back-end uses the Django web framework.
+DRIVER uses JavaScript, Python, HTML, CSS, and a small amount of Java and R. The front-end UI of the app uses the Angular v8.1.x framework and the back-end uses the Django web framework.
 
 ### What is the client-side technology used by DRIVER?
-HTML5 (consumed in any modern web browser) and a native Android app.
+HTML5 (consumed in any modern web browser) and a native Android, iOS app.
 
 ### What set of basemaps does DRIVER use?
 The basemaps are using Carto. You should see requests to map tiles similar to `https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/5/12/16.png` in your network tab.
 
 ### Does DRIVER have links to or interfaces with other systems?
-DRIVER gathers crash records from its companion Android application, which runs on users' Android smartphones. It also interfaces with darksky.net, which is an API that provides weather information for the crash records. It pull street information from Open Street Map extracts from GeoFabrik. Pickpoint.io is used for geocoding and reverse geocoding. DRIVER grabs street-level images from Mapillary to display to the user. DRIVER uses a basemap tile service from Carto.
+DRIVER gathers crash records from its companion Android application, which runs on users' Android smartphones. It also interfaces with OpenWeatherMap, which is an API that provides weather information for the crash records. It pull street information from Open Street Map extracts from GeoFabrik. Pickpoint.io is used for geocoding and reverse geocoding. DRIVER grabs street-level images from Mapillary to display to the user. DRIVER uses a basemap tile service from Carto.
 
 ### Does DRIVER have News Feeds or Widgets (e.g. RSS, Twitter, Atom, etc.)?
 No, there isn't any news feed integration.
