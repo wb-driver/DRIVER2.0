@@ -61,4 +61,4 @@ No, there isn't any news feed integration.
 The site requires authentication to use. It offers two methods of authentication. One is username/password authentication. The second is Single Sign On (SSO) that can be accessed if the user has a Google account. The SSO is achieved via the OAuth protocol. The site does not utilize 2FA/MFA. Once authentication has been achieved, the user receives a token that is used to authenticate each request to the site's API.
 
 ### What APIs does the Android/iOS app require access to?
-The DRIVER2.0 Android/iOS app needs access to the camera API.
+The DRIVER2.0 Android/iOS app needs access to the camera, Location and Notification API.
