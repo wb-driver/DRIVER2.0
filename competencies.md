@@ -23,10 +23,7 @@ This section describes the competencies for a DRIVER2.0 developer.
   - Celery
 * GIS experience, specifically using Windshaft
 * Knowledge of statistics and R
-* Knowledge of these additional technologies is also beneficial:
-  - NFS
-  - OAuth2
-  - Javascript package/build tools (Grunt and Bower)
+* Knowledge of Javascript package/build tools (Grunt and Bower) is also beneficial
 
 # Deployment/Maintenance
 
