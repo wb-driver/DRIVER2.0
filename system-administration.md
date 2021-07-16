@@ -70,22 +70,8 @@ A domain name is necessary for DRIVER2.0 to function correctly. If you do not ha
 
 ### 3. Configuration files
 
-When checking out the source code, make sure to checkout the tag that you want to deploy. The list of valid tags can be found [here](https://github.com/WorldBank-Transport/DRIVER/tags). To do this, run `git fetch --all && git checkout tags/<version>`.
+When checking out the source code, make sure to checkout the branch that you want to deploy. The list of valid branches can be found [here](https://github.com/hsarbas/DRIVER2.0). To do this, run `git fetch --all && git checkout branch/<version>`.
 
-
-#### Configuration wizard
-
-Run the setup wizard by executing `./scripts/generate_deployment_config`. This will prompt you for the domain name and IP addresses that you noted down previously. The script will then generate a barebones versions of the Ansible group-vars and inventory files for you, including auto-generated passwords. **You will still need to edit the group-vars**, but the wizard is a convenient way to get started.
-
-Once you've run the wizard, open up `deployment/ansible/group_vars/production` using a text editor. The file contains numerous parameters that must be set correctly in order for your installation of DRIVER2.0 to function. It also contains explanations of the meaning of each parameter. The **configuration wizard** will have already set most of these values to reasonable defaults, so you shouldn't need to change many. However, there are some that you will almost certainly want to change:
-- `app_version`: Set this to the `<version>` that corresponds to the tag you checked out in Step 3
-- `DRIVER2.0_admin_email`: Set this to your email
-- `languages`: Change this to the language(s) you want to use
-- `local_time_zone_id`: Set this to the time zone of the area where you will use DRIVER2.02.0
-- `local_country_code`: Set this to your country's two-letter code
-- `local_center_lat_lon`: Set this to the location where you want DRIVER2.0's maps to be centered by default.
-
-Don't worry about making a mistake here -- you can always change the parameters and re-run the deployment process (next section) if you realize you need to make changes later.
 
 ### 4. Deploy
 
