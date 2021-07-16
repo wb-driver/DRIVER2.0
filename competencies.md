@@ -53,7 +53,4 @@ This section describes the competencies for DRIVER2.0 operations/maintenance.
   - Celery
   - Windshaft
 
-* Knowledge of a cloud computing platform such as AWS
-* Specific services such as:
-  - EC2
-  - S3
+* Knowledge of a cloud computing platform such as AWS/GCP/Azure/Openstack
