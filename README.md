@@ -7,8 +7,6 @@ Resources are written and saved as .md files. To learn more about the installati
 files:
 
 | Document | Description |
-
-
 | - | - |
 | [**Frequently Asked Questions**](faqs.md) | A set of questions that have previously been asked by developers and system adminstrators. |
 | [**API Documentation**](API.md) | Description of API endpoints and response structure. |
