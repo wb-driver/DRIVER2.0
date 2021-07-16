@@ -15,4 +15,4 @@ files:
 | [**iOS Installation Guide**](ios-installation.md) | Guide to install DRIVER2.0 on iOS device |
 | [**API Documentation**](API.md) | Description of API endpoints and response structure. |
 | [**Competencies for working with a DRIVER instance**](competencies.md) | Definition of what tools and technologies an administrator may need to be familiar with to manage a DRIVER2.0 instance. |
-| [**DRIVER System Architecture Diagram**](images/driver_arch.png) | DRIVER2.0 Architecture diagram  |
+| [**DRIVER System Architecture Diagram**](images/driver_arch.jpg) | DRIVER2.0 Architecture diagram  |
